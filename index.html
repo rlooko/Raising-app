@@ -1157,7 +1157,7 @@ window.addEventListener('unhandledrejection', function (e) { window.__ERRORS.pus
               <g><rect x="237" y="321" width="2" height="17" rx="1" fill="#B4A6C6"/><ellipse class="t-lampglow" cx="238" cy="319" rx="10" ry="9" fill="#FFE9A8"/><path d="M233.5,318 h9 l-1.5,3 h-6 z" fill="#D9C7E2"/><circle cx="238" cy="318" r="3.4" fill="#FFF6D2" stroke="#D9C7E2" stroke-width=".9"/></g>
               <g><rect x="329" y="251" width="2" height="17" rx="1" fill="#B4A6C6"/><ellipse class="t-lampglow" cx="330" cy="249" rx="10" ry="9" fill="#FFE9A8"/><path d="M325.5,248 h9 l-1.5,3 h-6 z" fill="#D9C7E2"/><circle cx="330" cy="248" r="3.4" fill="#FFF6D2" stroke="#D9C7E2" stroke-width=".9"/></g>
 
-              <g class="t-char char-yongeun" data-act="openStatus" aria-label="용은 캐릭터" transform="translate(100,252)">
+              <g class="t-char char-yongeun" data-act="tapChar" aria-label="용은 캐릭터" transform="translate(100,252)">
                 <g class="sp st0" data-expr="idle">
                   <ellipse cx="0" cy="0" rx="10.5" ry="3.2" fill="rgba(50,42,80,.26)"/>
                   <g class="sp-body">
@@ -1181,7 +1181,7 @@ window.addEventListener('unhandledrejection', function (e) { window.__ERRORS.pus
                 </g>
               </g>
 
-              <g class="t-char char-chunbae" data-act="openStatus" aria-label="춘배 캐릭터" transform="translate(84,250)">
+              <g class="t-char char-chunbae" data-act="tapChar" aria-label="춘배 캐릭터" transform="translate(84,250)">
                 <g class="sp" data-expr="idle">
                   <ellipse cx="0" cy="0" rx="9.6" ry="3" fill="rgba(50,42,80,.24)"/>
                   <g class="sp-body">
@@ -3546,6 +3546,7 @@ function handleAction(act, el) {
     case 'goReport': switchTab('report'); break;
     case 'phaseToggle': townPhaseToggle(); break;
     case 'openStatus': openStatusCard(); break;
+    case 'tapChar': tapCharacter(); break;
     case 'openCastle': openCastle(); break;
     case 'openBank': openBank(); break;
     case 'openWorkshop': openWorkshop(); break;
