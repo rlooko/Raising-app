@@ -1,0 +1,79 @@
+# ─────────────────────────────────────────────────────────────
+# .claudeignore — Claude Code 보안 템플릿 (용은타운 / 드래곤프루츠)
+#
+# 쓰는 법
+#   1) Claude Code 를 실행할 폴더(프로젝트 루트)에 이 파일을 `.claudeignore` 로 복사합니다.
+#   2) 그 폴더에서 `claude` 를 실행하면 아래 경로는 읽지 않습니다.
+#   3) 한 번 더 잠그려면 `.claude/settings.json` 의 `permissions.deny` 에도 같은 패턴을 넣으세요.
+#      (예: "Read(./clients/**)", "Read(./**/*.pem)")
+#
+# 원칙: Claude가 코드 문제를 풀 때 필요한 것만 보이고,
+#       돈·신분·가족·고객 개인정보는 애초에 컨텍스트에 올리지 않습니다.
+# ─────────────────────────────────────────────────────────────
+
+# 1) 비밀 키 · 인증
+.env
+.env.*
+*.pem
+*.key
+*.p12
+*.pfx
+*.jks
+*secret*
+*credential*
+*serviceAccount*.json
+.firebase/
+.gcloud/
+.aws/
+.azure/
+.ssh/
+.netrc
+.git-credentials
+**/*token*.json
+
+# 2) 결혼 · 가족 · 신분 문서 (절대 올리지 않기)
+wedding/
+결혼/
+청첩장/
+가족/
+개인/
+*차용증*
+*계좌*
+*주민등록*
+*여권*
+*신분증*
+*건강보험*
+*예식장*
+*스드메*
+
+# 3) 회사 · 고객 · 크리에이터 개인정보
+clients/
+creators/
+contracts/
+invoices/
+*고객*
+*계약서*
+*정산서*
+*세금계산서*
+*급여*
+*salary*
+
+# 4) 사적인 메모 · 대화 기록
+journal/
+diary/
+memo/private*
+*.private.*
+memory/
+
+# 5) 잡음 (읽어도 의미 없는 것)
+node_modules/
+dist/
+build/
+.next/
+.cache/
+coverage/
+*.log
+*.tmp
+*.bak
+.DS_Store
+Thumbs.db

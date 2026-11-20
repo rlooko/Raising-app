@@ -926,6 +926,280 @@ main::-webkit-scrollbar{display:none}
   .timer-wrap{width:214px;height:214px}
   .timer-time{font-size:40px}
 }
+
+/* ===== V2 (가독성·요약·로드맵·벽돌·과외) ===== */
+/* ════════════════════════════════════════════════════════════
+   V2 — 가독성 · 요약 카드 · 3단계 로드맵 · 빚 벽돌 · Claude 과외
+   (기존 규칙 뒤에 얹는 덧쓰기 레이어 — 기능 코드는 그대로)
+   ════════════════════════════════════════════════════════════ */
+:root{
+  --tx2:#c9c2e0; --tx3:#a29bc0;
+  --line-2:rgba(255,255,255,.2);
+  --mint:#9df5d8; --gold:#ffe08a;
+}
+body{font-size:16px;line-height:1.5}
+#app{max-width:440px}
+main{padding:12px 16px calc(88px + var(--safe-b))}
+
+/* ── 글자 크기·대비: 모바일에서 한눈에 ── */
+.card{padding:16px;margin-bottom:13px;border-radius:22px}
+.sec-head{margin:20px 2px 10px}
+.sec-head h2{font-size:15px;letter-spacing:0;color:#e2ddf4}
+.sec-meta{font-size:12.5px;color:var(--tx2)}
+.link-btn{font-size:13px}
+.btn{font-size:15.5px;min-height:48px;border-radius:15px}
+.btn-sm{font-size:14px;min-height:42px}
+.add-row{font-size:14px;padding:14px}
+.hint{font-size:13px;color:var(--tx2)}
+.empty{font-size:14px;color:var(--tx2)}
+.row-btn{font-size:14.5px;padding:15px 16px}
+.about{font-size:13px;color:var(--tx2);line-height:1.7}
+.about b{color:var(--tx)}
+.field>span{font-size:12.5px;color:var(--tx2)}
+.field input,.field select,.field textarea{font-size:16px;padding:13px 13px}
+.field textarea{min-height:78px;font-size:15px}
+.brand{font-size:13.5px}
+.brand-sub{font-size:10.5px}
+.top-btn{font-size:12.5px;padding:7px 12px}
+.q-title{font-size:15.5px;line-height:1.42;letter-spacing:-.015em}
+.town{aspect-ratio:360/392}
+@media (max-height:800px){.town{aspect-ratio:360/360}}
+.q-meta{font-size:12.5px;color:var(--tx2)}
+.q-meta .tag{color:var(--mint)}
+.q-check{width:34px;height:34px;border-radius:11px}
+.qbtn{font-size:12.5px;padding:9px 12px;min-height:38px;border-radius:12px}
+.cta{font-size:16.5px;padding:17px;border-radius:19px}
+.badge{width:70px;padding:11px 5px}
+.badge .bi{font-size:21px}
+.badge .bn{font-size:10px;color:var(--tx2)}
+.tab{font-size:10px}
+.tab .ti{font-size:19px}
+/* 레벨 카드 — 정보는 그대로, 높이만 줄여 마을이 더 보이게 */
+.lv-card{padding:9px 13px 10px;margin-bottom:10px}
+.lv-head{gap:9px}
+.lv-badge{min-width:42px;height:42px;border-radius:13px;font-size:13px}
+.lv-name #charName{font-size:17.5px}
+.lv-title{font-size:11px;padding:3px 8px}
+.lv-sub{font-size:12.5px;color:var(--tx2)}
+.expbar{height:11px;margin-top:8px}
+.expbar-txt{font-size:10.5px}
+.chip{font-size:12.5px;padding:9px 12px}
+.entry .et{font-size:14.5px}
+.entry .es{font-size:12px;color:var(--tx2)}
+.entry .ea{font-size:14.5px}
+
+/* ── 홈: 요약 카드 ── */
+#heroBox{display:flex;flex-direction:column;gap:9px;margin-bottom:12px}
+.hero-main{position:relative;overflow:hidden;border-radius:20px;padding:11px 13px 12px;
+  border:1px solid rgba(143,240,208,.3);
+  background:linear-gradient(150deg,rgba(143,240,208,.2),rgba(188,171,255,.13) 58%,rgba(255,177,200,.12));
+  box-shadow:0 14px 34px -26px rgba(143,240,208,.9), inset 0 1px 0 rgba(255,255,255,.08)}
+.hero-main::after{content:"";position:absolute;right:-30px;top:-40px;width:120px;height:120px;border-radius:50%;
+  background:radial-gradient(circle,rgba(255,255,255,.18),transparent 70%);pointer-events:none}
+.hero-main .hm-k{font-size:11px;font-weight:900;letter-spacing:.1em;color:#c7fbec;text-transform:uppercase}
+.hero-main .hm-row{display:flex;align-items:center;gap:11px;margin-top:5px}
+.hero-main .hm-tx{flex:1;min-width:0}
+.hero-main .hm-title{font-size:16.5px;font-weight:900;line-height:1.45;letter-spacing:-.025em;color:#fff;
+  display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;word-break:keep-all;padding-bottom:2px}
+.hero-main .hm-sub{margin-top:4px;font-size:12.5px;color:#d6efe7;font-weight:800}
+.hm-btn{flex:0 0 auto;width:46px;height:46px;border-radius:50%;display:flex;flex-direction:column;gap:0;
+  align-items:center;justify-content:center;font-size:18px;font-weight:900;line-height:1;
+  background:rgba(255,255,255,.12);border:1.5px solid rgba(255,255,255,.26);color:#fff}
+.hm-btn small{font-size:9px;font-weight:900;letter-spacing:0;margin-top:2px;opacity:.9}
+.hm-btn:active{transform:scale(.94)}
+.hm-btn.done{background:linear-gradient(150deg,#8ff0d0,#bcabff);color:#16122a;border-color:transparent;
+  box-shadow:0 8px 20px -10px rgba(143,240,208,.9)}
+.hero-minis{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.hm-card{display:block;text-align:left;border-radius:17px;padding:10px 12px;
+  border:1px solid var(--line);background:linear-gradient(160deg,rgba(255,255,255,.08),rgba(255,255,255,.03));
+  min-height:0}
+.hm-card:active{transform:scale(.985)}
+.hm-card .k{display:flex;align-items:center;gap:5px;font-size:12px;font-weight:800;color:var(--tx2)}
+.hm-card .n{margin-top:2px;font-size:22px;font-weight:900;letter-spacing:-.035em;line-height:1.1;color:#fff}
+.hm-card .n small{font-size:12px;font-weight:800;color:var(--tx2);margin-left:2px;letter-spacing:0}
+.hm-card .s{margin-top:3px;font-size:11.5px;font-weight:700;color:var(--tx3);line-height:1.3}
+.hm-card .bar{height:5px;border-radius:99px;background:rgba(255,255,255,.12);margin-top:7px;overflow:hidden}
+.hm-card .bar i{display:block;height:100%;border-radius:99px;background:linear-gradient(90deg,#8ff0d0,#bcabff);transition:width .5s}
+.hm-card.dday .n{color:#ffe08a}
+
+/* ── 3단계 로드맵 ── */
+.rm-hero{display:flex;align-items:center;gap:13px;margin-bottom:4px}
+.rm-ring{position:relative;flex:0 0 auto;width:74px;height:74px}
+.rm-ring svg{width:74px;height:74px;transform:rotate(-90deg)}
+.rm-ring .bg{fill:none;stroke:rgba(255,255,255,.12);stroke-width:8}
+.rm-ring .fg{fill:none;stroke:url(#rmGrad);stroke-width:8;stroke-linecap:round;transition:stroke-dashoffset .6s}
+.rm-ring b{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:17px;font-weight:900}
+.rm-hero .t h2{font-size:18px;font-weight:900;letter-spacing:-.02em}
+.rm-hero .t p{font-size:13px;color:var(--tx2);line-height:1.45;margin-top:3px}
+.rm-stage{border-radius:22px;border:1px solid var(--line);padding:15px;margin-bottom:12px;position:relative;
+  background:linear-gradient(165deg,rgba(255,255,255,.075),rgba(255,255,255,.028))}
+.rm-stage.now{border-color:rgba(143,240,208,.4);box-shadow:0 0 0 1px rgba(143,240,208,.12),0 16px 36px -28px rgba(143,240,208,.9)}
+.rm-stage.past{opacity:.86}
+.rm-head{display:flex;align-items:flex-start;gap:11px}
+.rm-badge{flex:0 0 auto;width:44px;height:44px;border-radius:14px;display:flex;align-items:center;justify-content:center;
+  font-size:12.5px;font-weight:900;background:rgba(255,255,255,.08);color:#d4cdf0;letter-spacing:-.02em}
+.rm-stage.now .rm-badge{background:linear-gradient(150deg,#8ff0d0,#bcabff);color:#16122a}
+.rm-tt{flex:1;min-width:0}
+.rm-tt h3{font-size:16.5px;font-weight:900;letter-spacing:-.02em}
+.rm-tt .pd{font-size:12px;font-weight:800;color:var(--mint);margin-top:2px}
+.rm-tt p{font-size:12.5px;color:var(--tx2);margin-top:4px;line-height:1.45}
+.rm-pct{flex:0 0 auto;font-size:15px;font-weight:900;color:var(--mint);padding-top:3px}
+.rm-bar{height:9px;border-radius:99px;background:rgba(0,0,0,.3);border:1px solid var(--line);margin-top:12px;overflow:hidden}
+.rm-bar i{display:block;height:100%;border-radius:99px;background:linear-gradient(90deg,#8ff0d0,#bcabff);transition:width .5s}
+.rm-items{list-style:none;padding:0;margin:11px 0 0}
+.rm-item{display:flex;gap:10px;align-items:flex-start;width:100%;text-align:left;padding:11px 2px;
+  border-top:1px solid rgba(255,255,255,.07)}
+.rm-item .bx{flex:0 0 auto;width:25px;height:25px;border-radius:8px;border:1.5px solid var(--line-2);
+  display:flex;align-items:center;justify-content:center;font-size:12px;color:transparent;margin-top:1px;
+  background:rgba(0,0,0,.18)}
+.rm-item.on .bx{background:linear-gradient(150deg,#8ff0d0,#bcabff);border-color:transparent;color:#16122a}
+.rm-item .tx{flex:1;min-width:0;font-size:14.5px;font-weight:800;line-height:1.4;color:var(--tx);word-break:keep-all}
+.rm-item.on .tx{color:var(--tx2)}
+.rm-item .pg{font-size:11.5px;font-weight:800;color:var(--tx3);margin-top:3px}
+.rm-item .pg b{color:var(--mint)}
+.rm-item.auto .bx{border-style:dashed;border-color:rgba(143,240,208,.45);color:rgba(157,245,216,.75);font-size:13px}
+
+/* ── 참은 소비 · 빚 벽돌 ── */
+.brick-hero{position:relative;overflow:hidden;border-radius:22px;padding:16px;
+  border:1px solid rgba(255,177,200,.28);
+  background:linear-gradient(155deg,rgba(255,177,200,.18),rgba(188,171,255,.1) 55%,rgba(143,240,208,.1))}
+.brick-hero .k{font-size:12.5px;font-weight:900;color:#ffd7e3;letter-spacing:.02em}
+.brick-hero .n{margin-top:4px;font-size:34px;font-weight:900;letter-spacing:-.045em;line-height:1.05;color:#fff}
+.brick-hero .s{margin-top:5px;font-size:12.5px;font-weight:800;color:#efe4f7}
+.brick-gauge{height:11px;border-radius:99px;background:rgba(0,0,0,.32);border:1px solid rgba(255,255,255,.14);
+  margin-top:11px;overflow:hidden}
+.brick-gauge i{display:block;height:100%;border-radius:99px;background:linear-gradient(90deg,#ffb1c8,#ffe08a,#8ff0d0);
+  transition:width .6s cubic-bezier(.2,.9,.2,1)}
+.brick-hero .goal{display:flex;justify-content:space-between;font-size:11.5px;font-weight:800;color:#f2e6f6;margin-top:6px}
+#brickStage{position:relative;height:152px;margin:0 0 13px;border-radius:18px;overflow:hidden;
+  border:1px solid var(--line);background:radial-gradient(90% 80% at 50% 0%,rgba(255,255,255,.08),rgba(255,255,255,.02))}
+.bw{display:flex;flex-wrap:wrap;gap:5px;padding:11px 11px 0;align-content:flex-start}
+.brick{width:calc(20% - 4px);height:23px;border-radius:5px;background:linear-gradient(160deg,rgba(255,157,180,.42),rgba(224,104,139,.3));
+  box-shadow:inset 0 -3px 0 rgba(0,0,0,.16);border:1px solid rgba(255,177,200,.22);transition:background .4s,opacity .3s}
+.brick.on{background:linear-gradient(160deg,#ff9db4,#e0688b);border-color:rgba(255,220,232,.5);
+  box-shadow:inset 0 -3px 0 rgba(0,0,0,.2),0 0 14px -4px rgba(255,157,180,.9)}
+.brick.shatter{animation:brickBreak .62s cubic-bezier(.2,.8,.3,1) forwards}
+@keyframes brickBreak{
+  0%{transform:none;opacity:1}
+  35%{transform:translate(calc(var(--bx) * .4),calc(var(--by) * .3)) rotate(calc(var(--br) * .5)) scale(1.06);opacity:1}
+  100%{transform:translate(var(--bx),var(--by)) rotate(var(--br)) scale(.35);opacity:0}
+}
+.bw-k{position:absolute;left:0;right:0;bottom:0;text-align:center;font-size:11.5px;font-weight:800;color:#f3e6ee;
+  padding:5px 8px 6px;background:linear-gradient(180deg,rgba(15,12,28,0),rgba(15,12,28,.86) 45%)}
+.bw-k b{color:#ffd7e3}
+.brick-burst{position:absolute;left:50%;top:44%;transform:translate(-50%,-50%);font-size:23px;font-weight:900;
+  color:#fff;text-shadow:0 2px 10px rgba(60,10,30,.9);animation:burst 2.6s cubic-bezier(.2,.9,.3,1) forwards;pointer-events:none;white-space:nowrap;
+  padding:8px 16px;border-radius:999px;background:radial-gradient(120% 140% at 50% 0%,rgba(255,157,180,.96),rgba(224,104,139,.92));
+  box-shadow:0 12px 30px -12px rgba(255,157,180,.9),inset 0 1px 0 rgba(255,255,255,.4)}
+@keyframes burst{0%{opacity:0;transform:translate(-50%,-40%) scale(.7)}
+  9%{opacity:1;transform:translate(-50%,-58%) scale(1.08)}
+  20%{opacity:1;transform:translate(-50%,-62%) scale(1)}
+  82%{opacity:1;transform:translate(-50%,-66%) scale(1)}
+  100%{opacity:0;transform:translate(-50%,-78%) scale(.98)}}
+.brick-dust{position:absolute;width:7px;height:7px;border-radius:2px;background:#ffb1c8;pointer-events:none;
+  animation:dust .7s ease-out forwards}
+@keyframes dust{0%{opacity:1;transform:translate(0,0) rotate(0)}100%{opacity:0;transform:translate(var(--dx),var(--dy)) rotate(var(--dr))}}
+.chiprow{display:flex;flex-wrap:wrap;gap:7px;margin:10px 0 12px}
+.chip2{padding:9px 13px;border-radius:12px;font-size:13px;font-weight:800;color:var(--tx2);
+  background:rgba(255,255,255,.055);border:1px solid var(--line)}
+.chip2.on{color:#16122a;background:linear-gradient(140deg,#ffc0d4,#ffe08a);border-color:transparent}
+.brick-form .row-2{gap:9px}
+.brick-form input{width:100%;background:rgba(0,0,0,.3);border:1px solid var(--line-2);border-radius:13px;
+  padding:13px;color:var(--tx);font-size:16px;font-weight:700;outline:none}
+.brick-form input:focus{border-color:rgba(255,177,200,.6);box-shadow:0 0 0 3px rgba(255,177,200,.12)}
+.brick-form .btn-main{width:100%;margin-top:10px;min-height:54px;font-size:16.5px}
+.brk-item{display:flex;align-items:center;gap:10px;padding:12px 13px;border-radius:15px;
+  border:1px solid var(--line);background:linear-gradient(160deg,rgba(255,255,255,.06),rgba(255,255,255,.025))}
+.brk-item .ic{font-size:17px}
+.brk-item .tx{flex:1;min-width:0}
+.brk-item .tx b{display:block;font-size:14.5px;font-weight:800;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.brk-item .tx span{display:block;font-size:11.5px;color:var(--tx3);margin-top:2px;font-weight:700}
+.brk-item .am{font-size:15px;font-weight:900;color:#ffc0d4;white-space:nowrap}
+.brk-item .del{width:30px;height:30px;border-radius:10px;background:rgba(255,255,255,.06);color:var(--tx3);font-size:12px}
+
+/* ── Claude 과외 ── */
+.cl-bridge{border-radius:22px}
+.cl-row{display:flex;align-items:center;gap:8px;font-size:15px;font-weight:900}
+.cl-dot{width:9px;height:9px;border-radius:50%;background:#ffd680;box-shadow:0 0 11px #ffd680;flex:0 0 auto}
+.cl-dot.on{background:#7cf2c0;box-shadow:0 0 11px #7cf2c0}
+.cl-dot.off{background:#ff8fae;box-shadow:0 0 9px #ff8fae}
+.cl-sub{font-size:12.5px;color:var(--tx2);margin-top:7px;line-height:1.55}
+.cl-sub code{font-size:11.5px;background:rgba(0,0,0,.4);border:1px solid var(--line);border-radius:6px;padding:1px 5px;color:#c9ffef}
+.cl-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:12px}
+.cl-stats>div{background:rgba(255,255,255,.055);border-radius:13px;padding:9px 6px;text-align:center;border:1px solid var(--line)}
+.cl-stats span{display:block;font-size:11.5px;font-weight:800;color:var(--tx3)}
+.cl-stats b{display:block;font-size:18px;font-weight:900;color:var(--mint);margin-top:2px}
+.cl-btns{display:flex;gap:8px;margin-top:11px}
+.cl-btns .btn{flex:1}
+.cl-seg{display:grid;grid-template-columns:repeat(4,1fr);gap:5px;background:rgba(0,0,0,.28);
+  padding:4px;border-radius:14px;margin:14px 0 12px;border:1px solid var(--line)}
+.cl-seg button{padding:10px 2px;border-radius:10px;font-size:13px;font-weight:800;color:var(--tx2)}
+.cl-seg button.on{background:linear-gradient(140deg,rgba(143,240,208,.24),rgba(188,171,255,.22));color:#eafff8;
+  box-shadow:inset 0 0 0 1px rgba(143,240,208,.35)}
+.mcard{border:1px solid var(--line);border-radius:19px;padding:15px;
+  background:linear-gradient(165deg,rgba(255,255,255,.07),rgba(255,255,255,.028))}
+.mcard.open{border-color:rgba(143,240,208,.32);box-shadow:0 0 0 1px rgba(143,240,208,.08)}
+.mc-top{display:flex;align-items:center;gap:7px;flex-wrap:wrap}
+.mc-kind{font-size:11px;font-weight:900;padding:3px 8px;border-radius:7px;letter-spacing:.05em}
+.mc-kind.en{background:rgba(143,240,208,.16);color:#9df5d8;border:1px solid rgba(143,240,208,.34)}
+.mc-kind.sql{background:rgba(188,171,255,.16);color:#d3c6ff;border:1px solid rgba(188,171,255,.34)}
+.mc-lv{font-size:11.5px;color:var(--tx3);font-weight:800}
+.mc-st{margin-left:auto;font-size:11px;font-weight:900;color:var(--tx3);white-space:nowrap}
+.mc-st.sent{color:#ffd680}
+.mc-st.graded{color:#7cf2c0}
+.mc-title{font-size:16px;font-weight:900;margin-top:9px;line-height:1.36;letter-spacing:-.02em}
+.mc-prompt{font-size:14.5px;line-height:1.6;color:#e9e4f8;margin-top:8px;white-space:pre-wrap;word-break:keep-all}
+.mc-schema{display:block;background:rgba(0,0,0,.42);border:1px solid var(--line);border-radius:12px;
+  padding:11px;font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:12px;line-height:1.62;
+  color:#cfd7ff;white-space:pre;overflow-x:auto;margin-top:10px}
+.mc-hint{font-size:13px;color:#ffe9b8;margin-top:10px;line-height:1.55}
+.mc-ans textarea{width:100%;min-height:104px;margin-top:11px;background:rgba(0,0,0,.3);
+  border:1px solid var(--line-2);border-radius:14px;padding:12px;font-size:15px;line-height:1.55;
+  color:var(--tx);outline:none;resize:vertical;font-family:inherit}
+.mc-ans textarea:focus{border-color:rgba(143,240,208,.55);box-shadow:0 0 0 3px rgba(143,240,208,.1)}
+.mc-ans .btn{width:100%;margin-top:9px}
+.mc-mine{margin-top:11px;padding:12px;border-radius:13px;background:rgba(255,255,255,.05);
+  border:1px solid var(--line);font-size:14px;line-height:1.55;white-space:pre-wrap;word-break:break-word}
+.mc-mine .who{display:block;font-size:11px;font-weight:900;color:var(--tx3);margin-bottom:5px;letter-spacing:.04em}
+.mc-fb{margin-top:11px;border-radius:15px;padding:13px;background:rgba(143,240,208,.1);border:1px solid rgba(143,240,208,.3)}
+.mc-fb .sc{display:flex;align-items:center;gap:8px;font-size:12.5px;font-weight:900;color:#9df5d8}
+.mc-fb .sc b{font-size:19px;color:#fff}
+.mc-fb .fb{font-size:14px;line-height:1.6;margin-top:7px;white-space:pre-wrap;word-break:keep-all;color:#eef7f3}
+.mc-fb .fx{font-size:13.5px;line-height:1.55;margin-top:10px;padding-top:10px;
+  border-top:1px dashed rgba(255,255,255,.2);white-space:pre-wrap;color:#dceee7;font-family:ui-monospace,SFMono-Regular,Menlo,monospace}
+.mc-sample{margin-top:10px;font-size:13.5px;line-height:1.55;color:var(--tx2)}
+.mc-sample b{color:#cfe8ff;display:block;font-size:11.5px;letter-spacing:.04em;margin-bottom:4px}
+details.mc-more{margin-top:10px}
+details.mc-more summary{font-size:12.5px;color:var(--tx2);font-weight:800;cursor:pointer;padding:4px 0}
+details.mc-more .mc-hint{margin-top:6px}
+.cl-wait{margin-top:11px;display:flex;align-items:flex-start;gap:8px;padding:11px 12px;border-radius:13px;
+  background:rgba(255,214,128,.09);border:1px solid rgba(255,214,128,.24);font-size:12.5px;line-height:1.5;color:#ffe9b8;font-weight:700}
+.cl-wait>span{flex:0 0 auto;font-size:14px;line-height:1.35}
+.cl-wait>div{flex:1;min-width:0}
+.cl-wait b{display:block;margin-top:4px;font-family:ui-monospace,SFMono-Regular,Menlo,monospace;
+  font-size:11.5px;font-weight:700;color:#fff3cf;background:rgba(0,0,0,.28);border-radius:7px;padding:4px 7px;word-break:break-all}
+
+/* ── 더보기 빠른 이동 ── */
+.quick-grid{display:grid;grid-template-columns:1fr 1fr;gap:9px}
+.quick-grid button{display:flex;flex-direction:column;align-items:flex-start;gap:3px;padding:14px 13px;
+  border-radius:16px;border:1px solid var(--line);background:linear-gradient(160deg,rgba(255,255,255,.07),rgba(255,255,255,.03));
+  font-size:14.5px;font-weight:800;text-align:left}
+.quick-grid button span{font-size:20px;line-height:1}
+.quick-grid button small{font-size:11.5px;font-weight:700;color:var(--tx3)}
+.quick-grid button:active{transform:scale(.98)}
+
+@media (max-width:370px){
+  .hero-main .hm-title{font-size:16.5px}
+  .hm-card .n{font-size:21px}
+  .brick-hero .n{font-size:30px}
+  .tab{font-size:9px}
+  .tab .ti{font-size:17px}
+}
+@media (prefers-reduced-motion: reduce){
+  .brick.shatter{animation-duration:.01ms}
+  .brick-burst{animation-duration:.01ms}
+}
+
 </style>
 <script>
 /* 개발용 오류 수집기 — 화면에는 보이지 않고 window.__ERRORS에만 쌓입니다. */
@@ -959,6 +1233,9 @@ window.addEventListener('unhandledrejection', function (e) { window.__ERRORS.pus
         </div>
         <div class="expbar"><div class="expbar-fill" id="expFill"></div><span class="expbar-txt" id="expTxt">0 / 40</span></div>
       </div>
+
+      <!-- V2 홈 요약 카드 -->
+      <div id="heroBox" aria-live="polite"></div>
 
       <div class="town ph-day" id="town">
         <canvas class="town3d" id="town3d" aria-hidden="true"></canvas>
@@ -1473,7 +1750,15 @@ window.addEventListener('unhandledrejection', function (e) { window.__ERRORS.pus
 
     <!-- 더보기 -->
     <section class="screen" id="screen-more">
-      <div class="sec-head" style="margin-top:6px"><h2>내 캐릭터</h2></div>
+      <div class="sec-head" style="margin-top:6px"><h2>빠른 이동</h2><span class="sec-meta">원래 있던 화면</span></div>
+      <div class="quick-grid">
+        <button data-v2="heroGo" data-k="timer"><span>⏱</span>타임어택<small>10·20·25분 집중</small></button>
+        <button data-v2="heroGo" data-k="money"><span>💰</span>돈 기록<small>수입·지출·고정비</small></button>
+        <button data-v2="heroGo" data-k="skill"><span>🎯</span>커리어<small>데이터 vs 9급 트랙</small></button>
+        <button data-v2="heroGo" data-k="report"><span>🧠</span>리포트<small>객관화 진단</small></button>
+      </div>
+
+      <div class="sec-head" style="margin-top:20px"><h2>내 캐릭터</h2></div>
       <div class="card">
         <label class="field"><span>이름</span><input id="setName" maxlength="12" placeholder="몽글이"></label>
         <div class="row-2">
@@ -1496,19 +1781,110 @@ window.addEventListener('unhandledrejection', function (e) { window.__ERRORS.pus
 
       <div class="sec-head"><h2>이 게임에 대해</h2></div>
       <div class="card about">
-        <b>권용은 키우기 v1.1</b> · 오프라인에서도 열리는 단일 파일 웹앱입니다.<br>
+        <b>권용은 키우기 v2.0</b> · 오프라인에서도 열리는 단일 파일 웹앱입니다.<br>
         기록은 <b>이 기기(localStorage)</b>에 먼저 저장되고, 인터넷이 되면 내 Firebase(<b>yongeun-town</b>)에 ☁️ 자동으로 백업되어 폰·컴퓨터가 같은 기록을 봐요. 오프라인이어도 이 기기만으로 그대로 동작합니다.<br>
         아이폰 홈 화면에 추가하면 앱처럼 전체 화면으로 열립니다(공유 → 홈 화면에 추가).
       </div>
     </section>
+  <!-- ===== V2 화면: 로드맵 · 벽돌 · Claude 과외 ===== -->
+  <section class="screen" id="screen-roadmap">
+    <div class="rm-hero">
+      <div class="rm-ring">
+        <svg viewBox="0 0 74 74" aria-hidden="true">
+          <defs>
+            <linearGradient id="rmGrad" x1="0" y1="0" x2="1" y2="1">
+              <stop offset="0%" stop-color="#8ff0d0"/><stop offset="100%" stop-color="#bcabff"/>
+            </linearGradient>
+          </defs>
+          <circle class="bg" cx="37" cy="37" r="31"/>
+          <circle class="fg" id="rmRing" cx="37" cy="37" r="31" stroke-dasharray="194.8" stroke-dashoffset="194.8"/>
+        </svg>
+        <b id="rmPct">0%</b>
+      </div>
+      <div class="t">
+        <h2>3단계 인생 로드맵</h2>
+        <p id="rmNow">Stage 1 · 궤도 진입</p>
+      </div>
+    </div>
+    <div id="roadmapBox"></div>
+    <div class="card about">
+      체크는 이 기기(<b>localStorage</b>)에 저장되고, 인터넷이 되면 Firebase로 ☁️ 자동 동기화돼요.
+      <b>자동</b> 항목(점선 상자)은 앱 기록으로 채워지니 손으로 체크하지 않아도 됩니다.
+    </div>
+  </section>
+
+  <section class="screen" id="screen-brick">
+    <div class="sec-head" style="margin-top:6px"><h2>참은 소비 → 빚 벽돌 깨기</h2><span class="sec-meta" id="brickMeta"></span></div>
+
+    <div class="brick-hero">
+      <div class="k">🧱 이번 달 방어한 돈</div>
+      <div class="n" id="brickMonthNum">0원</div>
+      <div class="s" id="brickMonthSub">누적 0원 · 벽돌 0개</div>
+      <div class="brick-gauge"><i id="brickGauge" style="width:0%"></i></div>
+      <div class="goal"><span id="brickGoalTxt">목표 200,000원</span><span id="brickGoalPct">0%</span></div>
+    </div>
+
+    <div id="brickStage" aria-hidden="true"></div>
+
+    <div class="card brick-form">
+      <div class="field" style="margin-bottom:0"><span>오늘 살 뻔한 것</span></div>
+      <div class="chiprow" id="brickChips">
+        <button class="chip2" data-v2="brickChip" data-k="커피">☕ 커피</button>
+        <button class="chip2" data-v2="brickChip" data-k="배달">🛵 배달</button>
+        <button class="chip2" data-v2="brickChip" data-k="쇼핑">🛍 쇼핑</button>
+        <button class="chip2" data-v2="brickChip" data-k="택시">🚕 택시</button>
+        <button class="chip2" data-v2="brickChip" data-k="간식">🍪 간식</button>
+        <button class="chip2" data-v2="brickChip" data-k="구독">📱 구독</button>
+      </div>
+      <input id="brickLabel" maxlength="30" placeholder="뭘 참았어? (예: 스타벅스 라떼)" aria-label="참은 소비 이름">
+      <input id="brickAmt" type="number" inputmode="numeric" min="0" step="500" placeholder="금액 (원)" style="margin-top:9px" aria-label="아낀 금액">
+      <button class="btn btn-main" data-v2="brickBreak">🧱 참았어 — 벽돌 깨기</button>
+      <div class="hint">1,000원 = 벽돌 1개. 기록할수록 이번 달 벽이 무너지고 EXP가 쌓여요.</div>
+    </div>
+
+    <div class="sec-head"><h2>깬 벽돌</h2><span class="sec-meta" id="brickCount"></span></div>
+    <div id="brickList" class="stack"></div>
+  </section>
+
+  <section class="screen" id="screen-claude">
+    <div class="sec-head" style="margin-top:6px"><h2>Claude 과외</h2><span class="sec-meta" id="claudeMeta">맥북 Claude Code 직통</span></div>
+
+    <div class="card cl-bridge">
+      <div class="cl-row"><span class="cl-dot" id="clDot"></span><b id="clState">연결 확인 중…</b></div>
+      <div class="cl-sub" id="clSub">맥북 터미널에서 <code>python3 claude_bridge.py tutor</code> 를 돌리면 새 문제가 오고, 내 답안은 채점돼서 돌아와요.</div>
+      <div class="cl-stats">
+        <div><span>제출</span><b id="clSent">0</b></div>
+        <div><span>채점</span><b id="clGraded">0</b></div>
+        <div><span>평균</span><b id="clAvg">—</b></div>
+      </div>
+      <div class="cl-btns">
+        <button class="btn btn-ghost btn-sm" data-v2="clSync">☁️ 지금 동기화</button>
+        <button class="btn btn-ghost btn-sm" data-v2="clNew">✉️ 새 문제 요청</button>
+      </div>
+    </div>
+
+    <div class="cl-seg" id="clFilter">
+      <button class="on" data-v2="clFilter" data-k="all">전체</button>
+      <button data-v2="clFilter" data-k="en">영어</button>
+      <button data-v2="clFilter" data-k="sql">SQL</button>
+      <button data-v2="clFilter" data-k="done">완료</button>
+    </div>
+
+    <div id="claudeList" class="stack"></div>
+
+    <div class="card about">
+      미션·답안·피드백만 Firebase(<b>claude_missions</b>)에 오가요. 실명·주소·계좌 같은 개인정보는 넣지 않습니다.
+      오프라인이면 이 기기에 저장되고, 연결되면 자동으로 다시 올라가요.
+    </div>
+  </section>
+
   </main>
 
   <nav id="tabbar">
     <button class="tab active" data-tab="home"><span class="ti">🏠</span>홈</button>
-    <button class="tab" data-tab="timer"><span class="ti">⏱</span>타임어택</button>
-    <button class="tab" data-tab="money"><span class="ti">💰</span>돈</button>
-    <button class="tab" data-tab="skill"><span class="ti">🎯</span>커리어</button>
-    <button class="tab" data-tab="report"><span class="ti">🧠</span>리포트</button>
+    <button class="tab" data-tab="roadmap"><span class="ti">🗺️</span>로드맵</button>
+    <button class="tab" data-tab="brick"><span class="ti">🧱</span>벽돌</button>
+    <button class="tab" data-tab="claude"><span class="ti">🎓</span>과외</button>
     <button class="tab" data-tab="more"><span class="ti">⚙️</span>더보기</button>
   </nav>
 
@@ -1667,7 +2043,10 @@ function defaultState() {
     town: { mode: 'auto' },
     exec: [],
     house: { items: houseDefaults() },
-    debt: { total: 50000000, repaid: 0, log: [] }
+    debt: { total: 50000000, repaid: 0, log: [] },
+    roadmap: {},
+    brick: { items: [], goal: 200000 },
+    claude: { list: missionSeeds(), lastSync: 0, reqAt: 0, filter: 'all', cloudSeeded: false, pendingPush: [] }
   };
 }
 
@@ -1702,6 +2081,17 @@ function loadState() {
     if (!s.house || !Array.isArray(s.house.items) || !s.house.items.length) s.house = { items: houseDefaults() };
     if (!s.debt || typeof s.debt !== 'object') s.debt = { total: 50000000, repaid: 0, log: [] };
     if (!Array.isArray(s.debt.log)) s.debt.log = [];
+    if (!s.roadmap || typeof s.roadmap !== 'object') s.roadmap = {};
+    if (!s.brick || typeof s.brick !== 'object') s.brick = { items: [], goal: 200000 };
+    if (!Array.isArray(s.brick.items)) s.brick.items = [];
+    if (!Number(s.brick.goal)) s.brick.goal = 200000;
+    if (!s.claude || typeof s.claude !== 'object') s.claude = {};
+    if (!Array.isArray(s.claude.list)) s.claude.list = [];
+    if (!s.claude.list.length) s.claude.list = missionSeeds();
+    if (!Number(s.claude.lastSync)) s.claude.lastSync = 0;
+    if (!Number(s.claude.reqAt)) s.claude.reqAt = 0;
+    if (!s.claude.filter) s.claude.filter = 'all';
+    if (!Array.isArray(s.claude.pendingPush)) s.claude.pendingPush = [];
     if (migrateQuests(s)) QUEST_MIGRATED = true;
     return s;
   } catch (e) { return d; }
@@ -3736,6 +4126,7 @@ function renderAll() {
   renderMore();
   paintTimer();
   renderTown();
+  renderHero(); renderRoadmap(); renderBrick(); renderClaude();
 }
 function renderTimerStats() {
   const logs = S.log || [];
@@ -3766,7 +4157,7 @@ function handleParams() {
   let p;
   try { p = new URLSearchParams(location.search); } catch (e) { return; }
   const tab = p.get('tab');
-  if (tab && ['home', 'timer', 'money', 'skill', 'report', 'more'].includes(tab)) switchTab(tab, true);
+  if (tab && ['home', 'timer', 'money', 'skill', 'report', 'more', 'roadmap', 'brick', 'claude'].includes(tab)) switchTab(tab, true);
   const st = parseInt(p.get('start'), 10);
   if (st > 0) {
     switchTab('timer', true);
@@ -3923,6 +4314,755 @@ function init() {
     }, 14000);
   }, 1200);
 }
+
+/* ===== V2 로직 ===== */
+/* ═══════════════════════════════════════════════════════════════════
+   V2 — 요약 카드 · 3단계 로드맵 · 참은 소비 벽돌 · Claude 과외
+   · 기존 상태(S)·저장(save)·3D 마을(TOWN3D) 위에 얹기만 합니다.
+   · 개인정보 없음: 미션/답안/피드백 + 방어 금액만 저장.
+   ═══════════════════════════════════════════════════════════════════ */
+const V2_DAY = 86400000;
+const V2_DDAY = [
+  { key: 'move', label: '안양 이사', emoji: '🏡', date: '2027-01-16' },
+  { key: 'wedding', label: '결혼', emoji: '💍', date: '2027-02-27' }
+];
+
+function v2Dday(dateStr) {
+  const d = new Date(dateStr + 'T00:00:00');
+  const t = new Date(TODAY + 'T00:00:00');
+  return Math.round((d - t) / V2_DAY);
+}
+function v2Short(s, n) { s = String(s || ''); return s.length > (n || 28) ? s.slice(0, (n || 28) - 1) + '…' : s; }
+
+/* ── 미션 시드 (첫 접속에 바로 쓸 수 있는 6개) ─────────────── */
+function missionSeeds() {
+  const t0 = 1795152000000; // 2026-11-20 09:00 KST 부근 — 시드 순서 고정용
+  return [
+    {
+      id: 'seed-en-1', kind: 'en', level: '실무 · B1', source: 'seed',
+      title: '계약 승인 재촉 슬랙 한 줄',
+      prompt: 'A client hasn\'t replied for 3 days and your contract approval is stuck. Write ONE Slack message (2 sentences, in English) that nudges them politely — no guilt-tripping, no "sorry to bother you".',
+      hint: 'Just checking in on… / Happy to hop on a quick call if that\'s easier.',
+      sample: 'Hi Sarah — just checking in on the contract approval; we\'re ready to move as soon as you sign off. Happy to hop on a quick call today if that\'s easier.',
+      answer: '', status: 'open', submittedAt: 0, gradedAt: 0, feedback: '', score: null, corrected: '',
+      createdAt: t0, updatedAt: t0
+    },
+    {
+      id: 'seed-en-2', kind: 'en', level: '실무 · B1', source: 'seed',
+      title: '밴쿠버 팀 스탠드업 오프닝',
+      prompt: 'Your Vancouver teammate covered your task yesterday. Write ONE opening line for today\'s standup: thank them naturally, then move into your update. Keep it under 25 words.',
+      hint: 'Thanks for picking up… — I\'ll keep this quick.',
+      sample: 'Thanks for picking up the client deck yesterday, Maya — I\'ll keep this quick: today I\'m finishing the SQL report and need a review by 3.',
+      answer: '', status: 'open', submittedAt: 0, gradedAt: 0, feedback: '', score: null, corrected: '',
+      createdAt: t0 + 60000, updatedAt: t0 + 60000
+    },
+    {
+      id: 'seed-en-3', kind: 'en', level: '실무 · B2', source: 'seed',
+      title: '브랜드 매니저에게 첫 협업 메일',
+      prompt: 'Write a 3-sentence email in English to a brand manager you\'ve never met: (1) you lead creator partnerships at a Korean agency, (2) name two creators and their niche, (3) ask for a 15-minute call this week. Canadian-friendly tone: warm, direct, no fluff.',
+      hint: 'I lead… / Two of our creators… / Would you be open to a 15-minute call?',
+      sample: 'Hi Jordan, I lead creator partnerships at Dragonfruit, a Korean agency working with Xiaohongshu and Instagram creators. Two of our creators — Daeun (quiet lifestyle vlogs) and Jen (data-career content) — might fit your spring campaign. Would you be open to a 15-minute call this week to see if there\'s a fit?',
+      answer: '', status: 'open', submittedAt: 0, gradedAt: 0, feedback: '', score: null, corrected: '',
+      createdAt: t0 + 120000, updatedAt: t0 + 120000
+    },
+    {
+      id: 'seed-sql-1', kind: 'sql', level: '실무 · JOIN + GROUP BY', source: 'seed',
+      title: '채널별 완료 미션 매출',
+      prompt: '2026년에 완료된(status = \'completed\') 미션을 채널별로 묶어, 채널마다 완료 미션 수와 예산 합계를 예산 합계 큰 순서로 보여주세요.',
+      schema: 'creators(id, name, channel, country)\nmissions(id, creator_id, brand, status, budget_krw, created_at)\n-- status: \'open\' | \'completed\' | \'canceled\'\n-- created_at: DATE',
+      hint: 'JOIN creators ON missions.creator_id = creators.id → WHERE status + 연도 → GROUP BY channel → ORDER BY SUM(budget_krw) DESC',
+      sample: "SELECT c.channel,\n       COUNT(*) AS done_missions,\n       SUM(m.budget_krw) AS total_budget\nFROM missions m\nJOIN creators c ON c.id = m.creator_id\nWHERE m.status = 'completed'\n  AND m.created_at >= '2026-01-01'\n  AND m.created_at <  '2027-01-01'\nGROUP BY c.channel\nORDER BY total_budget DESC;",
+      answer: '', status: 'open', submittedAt: 0, gradedAt: 0, feedback: '', score: null, corrected: '',
+      createdAt: t0 + 180000, updatedAt: t0 + 180000
+    },
+    {
+      id: 'seed-sql-2', kind: 'sql', level: '실무 · MAX + HAVING', source: 'seed',
+      title: '크리에이터별 마지막 미션과 경과일',
+      prompt: '미션을 2건 이상 가진 크리에이터마다 마지막 미션일과, 2026-11-21 기준 경과일(days_since)을 구하세요. 마지막 미션일이 최근인 순서로 정렬하세요.',
+      schema: 'creators(id, name, channel, country)\nmissions(id, creator_id, brand, status, budget_krw, created_at)\n-- PostgreSQL 기준. MySQL이면 DATEDIFF(\'2026-11-21\', MAX(created_at))',
+      hint: 'MAX(created_at) + GROUP BY … HAVING COUNT(*) >= 2. 날짜 차이는 DB마다 문법이 달라요.',
+      sample: "SELECT c.id, c.name,\n       MAX(m.created_at) AS last_mission,\n       DATE '2026-11-21' - MAX(m.created_at) AS days_since\nFROM creators c\nJOIN missions m ON m.creator_id = c.id\nGROUP BY c.id, c.name\nHAVING COUNT(*) >= 2\nORDER BY last_mission DESC;",
+      answer: '', status: 'open', submittedAt: 0, gradedAt: 0, feedback: '', score: null, corrected: '',
+      createdAt: t0 + 240000, updatedAt: t0 + 240000
+    },
+    {
+      id: 'seed-sql-3', kind: 'sql', level: '실무 · 중복 점검', source: 'seed',
+      title: '같은 달, 금액이 다른 중복 지급 찾기',
+      prompt: 'payouts에서 같은 크리에이터가 같은 달(month)에 서로 다른 금액으로 두 번 이상 기록된 경우를 찾으세요. creator_id, month, 서로 다른 금액 개수, 최소·최대 금액을 보여주세요.',
+      schema: "payouts(id, creator_id, month, amount_krw, paid_at)\n-- month: '2026-10' 형식의 문자열",
+      hint: 'GROUP BY creator_id, month → HAVING COUNT(DISTINCT amount_krw) > 1',
+      sample: "SELECT creator_id, month,\n       COUNT(DISTINCT amount_krw) AS variants,\n       MIN(amount_krw) AS min_amount,\n       MAX(amount_krw) AS max_amount\nFROM payouts\nGROUP BY creator_id, month\nHAVING COUNT(DISTINCT amount_krw) > 1\nORDER BY month DESC, creator_id;",
+      answer: '', status: 'open', submittedAt: 0, gradedAt: 0, feedback: '', score: null, corrected: '',
+      createdAt: t0 + 300000, updatedAt: t0 + 300000
+    }
+  ];
+}
+
+/* ── 상태 보정 (기존 기록은 그대로) ───────────────────────── */
+function ensureV2State() {
+  if (!S.roadmap || typeof S.roadmap !== 'object') S.roadmap = {};
+  if (!S.brick || typeof S.brick !== 'object') S.brick = { items: [], goal: 200000 };
+  if (!Array.isArray(S.brick.items)) S.brick.items = [];
+  if (!Number(S.brick.goal) || S.brick.goal < 10000) S.brick.goal = 200000;
+  if (!S.claude || typeof S.claude !== 'object') S.claude = {};
+  const c = S.claude;
+  if (!Array.isArray(c.list)) c.list = [];
+  if (!Number(c.lastSync)) c.lastSync = 0;
+  if (!Number(c.reqAt)) c.reqAt = 0;
+  if (!c.filter) c.filter = 'all';
+  if (!Array.isArray(c.pendingPush)) c.pendingPush = [];
+  let added = 0;
+  missionSeeds().forEach(seed => {
+    if (!c.list.some(m => m && m.id === seed.id)) { c.list.push(seed); added++; }
+  });
+  if (added) { try { save(); } catch (e) { } }
+}
+
+/* ── 저장 유틸 ─────────────────────────────────────────────── */
+function v2LocalSave() { try { localStorage.setItem(KEY, JSON.stringify(S)); } catch (e) { } }
+
+/* ── 요약 카드 ─────────────────────────────────────────────── */
+function brickItems() { return (S.brick && Array.isArray(S.brick.items)) ? S.brick.items : []; }
+function brickOfMonth(mk) { return brickItems().filter(x => (x.month || (x.date || '').slice(0, 7)) === mk); }
+function brickSum(list) { return (list || []).reduce((a, b) => a + (Number(b.amount) || 0), 0); }
+function monthNetV2(mk) {
+  try {
+    const list = moneyOf(mk);
+    const inSum = sumType(list, 'income') + sumType(list, 'side');
+    const outSum = sumType(list, 'expense') + sumType(list, 'fixed');
+    return inSum - outSum;
+  } catch (e) { return 0; }
+}
+function heroQuestNow() {
+  const open = S.quests.filter(q => q.doneDate !== TODAY);
+  return open.length ? open[0] : null;
+}
+function townKeyForQuest(title) {
+  const t = String(title || '');
+  if (/이사|결혼|청첩|수은집|신혼/.test(t)) return 'house';
+  if (/돈|소비|적자|저축|안전망|애드포스트|부업|outlier|체험단/i.test(t)) return 'shop';
+  if (/타임어택|집중|25분|10분/.test(t)) return 'tower';
+  return 'castle';
+}
+function renderHero() {
+  const box = $('#heroBox'); if (!box) return;
+  const q = heroQuestNow();
+  const doneN = S.quests.filter(x => x.doneDate === TODAY).length;
+  const mk = monthKey();
+  const mList = brickOfMonth(mk);
+  const mSum = brickSum(mList);
+  const tSum = brickSum(mList.filter(x => x.date === TODAY));
+  const goal = Number(S.brick.goal) || 200000;
+  const pct = clamp(Math.round(mSum / goal * 100), 0, 100);
+  const dds = V2_DDAY.map(e => Object.assign({}, e, { d: v2Dday(e.date) })).filter(e => e.d >= 0).sort((a, b) => a.d - b.d);
+  const d1 = dds[0], d2 = dds[1];
+  const stageNow = rmStageNow();
+  const stage = ROADMAP_STAGES.find(s => s.id === stageNow) || ROADMAP_STAGES[0];
+
+  let main;
+  if (q) {
+    main = '<div class="hero-main">' +
+      '<div class="hm-k">오늘의 1순위</div>' +
+      '<div class="hm-row">' +
+        '<div class="hm-tx">' +
+          '<div class="hm-title">' + esc(q.title) + '</div>' +
+          '<div class="hm-sub">⏱ ' + q.minutes + '분 · +' + q.exp + ' EXP · ' + esc(stage.title) + ' ' + doneN + '/' + S.quests.length + '</div>' +
+        '</div>' +
+        '<button class="hm-btn go" data-v2="heroStart" data-id="' + q.id + '" aria-label="10분 시작"><span>▶</span><small>시작</small></button>' +
+        '<button class="hm-btn done" data-v2="heroDone" data-id="' + q.id + '" aria-label="완료"><span>✓</span><small>완료</small></button>' +
+      '</div></div>';
+  } else {
+    main = '<div class="hero-main">' +
+      '<div class="hm-k">오늘의 1순위</div>' +
+      '<div class="hm-row">' +
+        '<div class="hm-tx">' +
+          '<div class="hm-title">오늘 미션은 다 끝냈어요 🎉</div>' +
+          '<div class="hm-sub">벽돌 하나 더 깨거나, 로드맵 다음 칸을 봐요</div>' +
+        '</div>' +
+        '<button class="hm-btn go" data-v2="heroGo" data-k="roadmap" aria-label="로드맵 열기"><span>🗺</span><small>로드맵</small></button>' +
+      '</div></div>';
+  }
+
+  const minis =
+    '<div class="hero-minis">' +
+      '<button class="hm-card" data-v2="heroGo" data-k="brick" aria-label="벽돌깨기 열기">' +
+        '<div class="k">🧱 오늘 방어한 소비</div>' +
+        '<div class="n">' + won(tSum) + '</div>' +
+        '<div class="s">이번 달 ' + won(mSum) + ' · 목표 ' + pct + '%</div>' +
+        '<div class="bar"><i style="width:' + pct + '%"></i></div>' +
+      '</button>' +
+      '<button class="hm-card dday" data-v2="heroGo" data-k="roadmap" aria-label="로드맵 열기">' +
+        '<div class="k">' + (d1 ? d1.emoji + ' ' + d1.label : '🗺 로드맵') + '</div>' +
+        '<div class="n">' + (d1 ? 'D-' + d1.d + ' <small>일</small>' : 'D-Day') + '</div>' +
+        '<div class="s">' + (d2 ? esc(d2.label) + ' D-' + d2.d : '3단계 로드맵 보기') + '</div>' +
+      '</button>' +
+    '</div>';
+
+  box.innerHTML = main + minis;
+}
+
+/* ── 3단계 로드맵 ─────────────────────────────────────────── */
+const ROADMAP_STAGES = [
+  {
+    id: 's1', tag: 'S1', period: '지금 ~ 2026년 12월', title: '궤도 진입',
+    sub: 'SQL 실전 + 영어 10분 + 월 적자 탈출 → 데이터 vs 9급 결정',
+    items: [
+      { id: 's1_sql', t: 'SQL 실전 미션 5개 제출', auto: 'sqlSent', target: 5 },
+      { id: 's1_en', t: '영어 1줄 영작 5개 제출', auto: 'enSent', target: 5 },
+      { id: 's1_skip', t: '참은 소비 10번 기록', auto: 'skipCount', target: 10 },
+      { id: 's1_net', t: '이번 달 적자 0원 만들기', auto: 'monthNet', target: 1 },
+      { id: 's1_track', t: '데이터 분석가 vs 9급 비교하고 하나 고르기', auto: 'trackPicked', target: 1 },
+      { id: 's1_blog', t: '블로그·쇼츠 글 2편 발행', manual: true },
+      { id: 's1_cv', t: 'GitHub README·이력서 초안 정리', manual: true }
+    ]
+  },
+  {
+    id: 's2', tag: 'S2', period: '2027년 1월 ~ 2월', title: '안양 이사 & 결혼 준비',
+    sub: '이사·결혼 체크리스트 + 주 2회 블로그/쇼츠 루틴',
+    items: [
+      { id: 's2_house', t: '수은집 체크리스트 12개 완료', auto: 'houseDone', target: 12 },
+      { id: 's2_wed', t: '결혼 준비 3건 확정 (예식장·스드메·신혼여행)', manual: true },
+      { id: 's2_invite', t: '청첩장 문구·명단 확정', manual: true },
+      { id: 's2_budget', t: '신혼살림 예산표 만들기', manual: true },
+      { id: 's2_routine', t: '4주 동안 주 2회 블로그·쇼츠 발행', manual: true },
+      { id: 's2_move', t: '이사 당일 짐 정리 · 주소 이전', manual: true }
+    ]
+  },
+  {
+    id: 's3', tag: 'S3', period: '2027년 3월 ~', title: '이직 · 합격 포트폴리오',
+    sub: '지원 → 면접 → 첫 달 세후 350만 원',
+    items: [
+      { id: 's3_cert', t: 'SQLD 응시하고 합격', manual: true },
+      { id: 's3_pf', t: '포트폴리오 2건 공개 (GitHub Pages)', manual: true },
+      { id: 's3_apply', t: '데이터 분석가 지원 10건', manual: true },
+      { id: 's3_interview', t: '면접 3회 경험하고 피드백 정리', manual: true },
+      { id: 's3_offer', t: '세후 350만 원 이상 오퍼 받기', manual: true }
+    ]
+  }
+];
+function rmStageNow() {
+  const t = new Date(TODAY + 'T12:00:00').getTime();
+  if (t < new Date('2027-01-01T00:00:00').getTime()) return 's1';
+  if (t < new Date('2027-03-01T00:00:00').getTime()) return 's2';
+  return 's3';
+}
+function rmAuto(key, target) {
+  const list = claudeList();
+  const sent = list.filter(m => Number(m.submittedAt) > 0);
+  if (key === 'sqlSent') return { cur: sent.filter(m => m.kind === 'sql').length, target: target };
+  if (key === 'enSent') return { cur: sent.filter(m => m.kind === 'en').length, target: target };
+  if (key === 'skipCount') return { cur: brickItems().length, target: target };
+  if (key === 'houseDone') return { cur: houseDone(), target: target };
+  if (key === 'monthNet') {
+    const mk = monthKey();
+    const list = moneyOf(mk);
+    if (!list.length) return { cur: 0, target: 1, note: '돈 기록 없음' };
+    const net = monthNetV2(mk);
+    return { cur: net >= 0 ? 1 : 0, target: 1, note: '이번 달 ' + won(net) };
+  }
+  if (key === 'trackPicked') {
+    const a = S.career && S.career.active;
+    return { cur: a ? 1 : 0, target: 1, note: a ? '선택 완료' : '커리어 탭에서 선택' };
+  }
+  return { cur: 0, target: target || 1 };
+}
+function rmItemState(it) {
+  if (it.auto) {
+    const a = rmAuto(it.auto, it.target || 1);
+    return { done: a.cur >= (it.target || 1), cur: a.cur, target: it.target || 1, note: a.note || '' };
+  }
+  const d = (S.roadmap || {})[it.id];
+  return { done: !!d, cur: d ? 1 : 0, target: 1, note: d ? d.slice(5).replace('-', '/') + ' 완료' : '' };
+}
+function rmStageStat(st) {
+  const st8 = st.items.map(rmItemState);
+  const done = st8.filter(x => x.done).length;
+  return { done: done, total: st.items.length, pct: Math.round(done / st.items.length * 100) };
+}
+function renderRoadmap() {
+  const box = $('#roadmapBox'); if (!box) return;
+  const nowId = rmStageNow();
+  let allDone = 0, allTotal = 0;
+  const html = ROADMAP_STAGES.map(st => {
+    const s = rmStageStat(st); allDone += s.done; allTotal += s.total;
+    const cls = st.id === nowId ? ' now' : (ROADMAP_STAGES.findIndex(x => x.id === st.id) < ROADMAP_STAGES.findIndex(x => x.id === nowId) ? ' past' : '');
+    const items = st.items.map(it => {
+      const a = rmItemState(it);
+      const pg = it.auto
+        ? '<div class="pg">' + (a.done ? '✓ ' : '') + a.cur + ' / ' + a.target + (a.note ? ' · ' + esc(a.note) : '') + '</div>'
+        : '<div class="pg">' + (a.done ? '✓ ' + esc(a.note) : '눌러서 체크') + '</div>';
+      return '<button class="rm-item ' + (a.done ? 'on ' : '') + (it.auto ? 'auto' : '') + '" data-v2="rmToggle" data-id="' + it.id + '"' + (it.auto ? ' data-auto="' + it.auto + '"' : '') + ' aria-pressed="' + (a.done ? 'true' : 'false') + '">' +
+        '<span class="bx">' + (it.auto && !a.done ? '↻' : '✓') + '</span><span class="tx">' + esc(it.t) + pg + '</span></button>';
+    }).join('');
+    return '<div class="rm-stage' + cls + '">' +
+      '<div class="rm-head"><div class="rm-badge">' + st.tag + '</div>' +
+        '<div class="rm-tt"><h3>' + esc(st.title) + '</h3><div class="pd">' + esc(st.period) + '</div><p>' + esc(st.sub) + '</p></div>' +
+        '<div class="rm-pct">' + s.pct + '%</div></div>' +
+      '<div class="rm-bar"><i style="width:' + s.pct + '%"></i></div>' +
+      '<div class="rm-items">' + items + '</div>' +
+      '<div class="pg" style="margin-top:9px">' + s.done + ' / ' + s.total + ' 완료' + (st.id === nowId ? ' · 지금 여기' : '') + '</div>' +
+    '</div>';
+  }).join('');
+
+  box.innerHTML = html;
+  const totalPct = allTotal ? Math.round(allDone / allTotal * 100) : 0;
+  const pctEl = $('#rmPct'); if (pctEl) pctEl.textContent = totalPct + '%';
+  const ring = $('#rmRing');
+  if (ring) ring.setAttribute('stroke-dashoffset', String(Math.round(194.8 * (1 - totalPct / 100) * 10) / 10));
+  const now = ROADMAP_STAGES.find(s => s.id === nowId) || ROADMAP_STAGES[0];
+  const nowEl = $('#rmNow'); if (nowEl) nowEl.textContent = '지금은 ' + now.tag.replace('S', 'Stage ') + ' · ' + now.title;
+}
+function v2RmToggle(id, el) {
+  const st = ROADMAP_STAGES.find(s => s.items.some(i => i.id === id));
+  const it = st && st.items.find(i => i.id === id); if (!it) return;
+  if (it.auto) {
+    const a = rmItemState(it);
+    toast('앱 기록으로 자동 계산돼요 · ' + a.cur + '/' + a.target);
+    return;
+  }
+  S.roadmap = S.roadmap || {};
+  const was = !!S.roadmap[id];
+  if (was) { delete S.roadmap[id]; }
+  else { S.roadmap[id] = TODAY; logExec('roadmap', '🗺 ' + it.t + ' 체크'); }
+  save(); renderRoadmap(); renderHero();
+  sfx(was ? 'tap' : 'ok'); vibe(was ? 6 : 14);
+  if (!was) { toast('로드맵 한 칸 채웠어요'); addExp(12); }
+}
+
+/* ── 참은 소비 · 빚 벽돌 ─────────────────────────────────── */
+let BRICK_CHIP = '';
+function brickStageHTML(filled, per, mSum) {
+  let bricks = '';
+  for (let i = 0; i < 20; i++) bricks += '<i class="brick' + (i < filled ? ' on' : '') + '" data-i="' + i + '"></i>';
+  return '<div class="bw">' + bricks + '</div>' +
+    '<div class="bw-k">이번 달 <b>' + filled + '/20</b> 벽돌 · 1개 = ' + won(per) + '</div>';
+}
+function renderBrick() {
+  const mk = monthKey();
+  const list = brickOfMonth(mk);
+  const mSum = brickSum(list);
+  const goal = Number(S.brick.goal) || 200000;
+  const all = brickItems();
+  const allSum = brickSum(all);
+  const pct = clamp(mSum / goal * 100, 0, 100);
+
+  const nEl = $('#brickMonthNum'); if (nEl) nEl.textContent = won(mSum);
+  const subEl = $('#brickMonthSub');
+  if (subEl) subEl.textContent = '누적 ' + won(allSum) + ' · 벽돌 ' + all.length + '개 · 오늘 ' + brickOfMonth(mk).filter(x => x.date === TODAY).length + '개';
+  const gEl = $('#brickGauge'); if (gEl) gEl.style.width = pct + '%';
+  const goalEl = $('#brickGoalTxt'); if (goalEl) goalEl.textContent = '이번 달 목표 ' + won(goal);
+  const pctEl = $('#brickGoalPct'); if (pctEl) pctEl.textContent = Math.round(pct) + '%';
+  const meta = $('#brickMeta'); if (meta) meta.textContent = list.length + '개 · ' + won(mSum);
+
+  const stage = $('#brickStage');
+  if (stage) {
+    const per = Math.max(1, Math.round(goal / 20));
+    const filled = clamp(Math.floor(mSum / per), 0, 20);
+    stage.innerHTML = brickStageHTML(filled, per, mSum);
+  }
+
+  const box = $('#brickList');
+  if (box) {
+    const arr = all.slice(-8).slice().reverse();
+    box.innerHTML = arr.length ? arr.map(x => {
+      const d = String(x.date || '').slice(5).replace('-', '/');
+      return '<div class="brk-item"><span class="ic">🧱</span>' +
+        '<span class="tx"><b>' + esc(x.label) + '</b><span>' + esc(d) + ' · 벽돌 ' + Math.max(1, Math.round((Number(x.amount) || 0) / 1000)) + '개</span></span>' +
+        '<span class="am">' + won(x.amount) + '</span>' +
+        '<button class="del" data-v2="brickDel" data-id="' + x.id + '" aria-label="기록 삭제">✕</button></div>';
+    }).join('') : '<div class="empty">아직 깬 벽돌이 없어요.<br>오늘 참은 커피 한 잔부터 기록해 보세요.</div>';
+  }
+  const cnt = $('#brickCount'); if (cnt) cnt.textContent = '누적 ' + all.length + '개';
+  $$('#brickChips .chip2').forEach(b => b.classList.toggle('on', b.dataset.k === BRICK_CHIP));
+}
+function animateBrickBreak(amount, from, to) {
+  const stage = $('#brickStage'); if (!stage) return;
+  const bricks = Array.from(stage.querySelectorAll('.brick'));
+  for (let i = from; i < to; i++) {
+    const b = bricks[i]; if (!b) continue;
+    b.classList.add('on');
+    b.style.setProperty('--bx', (Math.random() * 220 - 110).toFixed(0) + 'px');
+    b.style.setProperty('--by', (-40 - Math.random() * 70).toFixed(0) + 'px');
+    b.style.setProperty('--br', (Math.random() * 520 - 260).toFixed(0) + 'deg');
+    b.classList.add('shatter');
+  }
+  const burst = document.createElement('div');
+  burst.className = 'brick-burst';
+  burst.textContent = '−' + won(amount) + ' 참았다!';
+  stage.appendChild(burst);
+  setTimeout(() => burst.remove(), 2700);
+
+  for (let i = 0; i < 18; i++) {
+    const d = document.createElement('i');
+    d.className = 'brick-dust';
+    d.style.left = (30 + Math.random() * 40) + '%';
+    d.style.top = (30 + Math.random() * 40) + '%';
+    d.style.setProperty('--dx', (Math.random() * 180 - 90).toFixed(0) + 'px');
+    d.style.setProperty('--dy', (-30 - Math.random() * 90).toFixed(0) + 'px');
+    d.style.setProperty('--dr', (Math.random() * 480 - 240).toFixed(0) + 'deg');
+    d.style.background = ['#ffb1c8', '#ffe08a', '#8ff0d0', '#bcabff'][i % 4];
+    stage.appendChild(d);
+    setTimeout(() => d.remove(), 760);
+  }
+}
+function v2BrickBreak() {
+  const labelEl = $('#brickLabel'), amtEl = $('#brickAmt');
+  const label = ((labelEl && labelEl.value) || BRICK_CHIP || '참은 소비').trim().slice(0, 40);
+  const amount = Math.round(num(amtEl && amtEl.value));
+  if (!amount || amount <= 0) { toast('얼마를 아꼈는지 먼저 적어줘'); if (amtEl) amtEl.focus(); sfx('bad'); return; }
+  if (amount > 10000000) { toast('1,000만 원 이하로 적어줘'); return; }
+  const goal = Number(S.brick.goal) || 200000;
+  const per = Math.max(1, Math.round(goal / 20));
+  const beforeFilled = clamp(Math.floor(brickSum(brickOfMonth(monthKey())) / per), 0, 20);
+
+  const it = { id: uid(), date: TODAY, month: monthKey(), label: label, amount: amount, ts: Date.now() };
+  S.brick.items.push(it);
+  if (S.brick.items.length > 800) S.brick.items = S.brick.items.slice(-800);
+  if (labelEl) labelEl.value = ''; if (amtEl) amtEl.value = ''; BRICK_CHIP = '';
+  save();
+  renderBrick(); renderHero(); renderRoadmap();
+  const afterFilled = clamp(Math.floor(brickSum(brickOfMonth(monthKey())) / per), 0, 20);
+  animateBrickBreak(amount, Math.min(beforeFilled, 19), Math.min(20, Math.max(afterFilled, beforeFilled + 1)));
+  sfx('done'); vibe([12, 26, 12]); confetti(14);
+  const exp = clamp(Math.round(amount / 1000) * 2, 2, 24);
+  addExp(exp);
+  logExec('skip', '🧱 참은 소비 ' + won(amount) + ' · ' + label);
+  if (TOWN.ready) townActivity('bank', '벽돌 하나 깼어! ' + won(amount), 2800);
+  toast('벽돌 ' + Math.max(1, Math.round(amount / 1000)) + '개 깼어요 · ' + won(amount));
+}
+function v2BrickDel(id) {
+  const x = brickItems().find(i => i.id === id); if (!x) return;
+  confirmSheet('벽돌 기록 지우기', '“' + esc(x.label) + '” ' + won(x.amount) + ' 기록을 지울까요?', '지우기', () => {
+    S.brick.items = brickItems().filter(i => i.id !== id);
+    save(); renderBrick(); renderHero(); renderRoadmap(); toast('지웠어요');
+  }, true);
+}
+
+/* ── Claude 과외 ─────────────────────────────────────────── */
+function claudeList() { return (S.claude && Array.isArray(S.claude.list)) ? S.claude.list : []; }
+function missionById(id) { return claudeList().find(m => m.id === id); }
+function claudeStats() {
+  const list = claudeList();
+  const sent = list.filter(m => Number(m.submittedAt) > 0);
+  const graded = list.filter(m => m.status === 'graded' && m.score != null);
+  const avg = graded.length ? Math.round(graded.reduce((a, b) => a + (Number(b.score) || 0), 0) / graded.length) : null;
+  return { sent: sent.length, graded: graded.length, avg: avg, total: list.length };
+}
+function claudeStatusText() {
+  const st = MISSION_SYNC.status();
+  if (st === 'on') return { cls: 'on', label: '맥북 Claude Code 연결됨', sub: '마지막 동기화 ' + (S.claude.lastSync ? new Date(S.claude.lastSync).toLocaleTimeString('ko-KR', { hour: '2-digit', minute: '2-digit' }) : '—') + ' · 미션 ' + claudeList().length + '개' };
+  if (st === 'off') return { cls: 'off', label: '오프라인 — 이 기기에 저장 중', sub: '인터넷이 연결되면 제출한 답안이 Firebase로 다시 올라가요.' };
+  return { cls: '', label: '연결 확인 중…', sub: '맥북 터미널에서 python3 claude_bridge.py tutor 를 돌리면 문제가 오고 채점이 돌아와요.' };
+}
+function renderClaude() {
+  const typed = {};
+  $$('#claudeList textarea').forEach(t => { if (t.value && t.id) typed[t.id] = t.value; });
+  const st8 = claudeStats();
+  const el1 = $('#clSent'), el2 = $('#clGraded'), el3 = $('#clAvg');
+  if (el1) el1.textContent = st8.sent;
+  if (el2) el2.textContent = st8.graded;
+  if (el3) el3.textContent = st8.avg == null ? '—' : st8.avg;
+  const s = claudeStatusText();
+  const dot = $('#clDot'); if (dot) dot.className = 'cl-dot ' + s.cls;
+  const stEl = $('#clState'); if (stEl) stEl.textContent = s.label;
+  const subEl = $('#clSub'); if (subEl) subEl.textContent = s.sub;
+
+  const filter = (S.claude && S.claude.filter) || 'all';
+  $$('#clFilter button').forEach(b => b.classList.toggle('on', b.dataset.k === filter));
+
+  const list = claudeList();
+  let arr = list.slice();
+  if (filter === 'en') arr = arr.filter(m => m.kind === 'en');
+  else if (filter === 'sql') arr = arr.filter(m => m.kind === 'sql');
+  else if (filter === 'done') arr = arr.filter(m => m.status === 'graded' || Number(m.submittedAt) > 0);
+  arr.sort((a, b) => {
+    const rank = m => (m.status === 'graded' ? 2 : (Number(m.submittedAt) > 0 ? 1 : 0));
+    const d = rank(a) - rank(b); if (d) return d;
+    return (Number(a.createdAt) || 0) - (Number(b.createdAt) || 0);
+  });
+
+  const box = $('#claudeList'); if (!box) return;
+  if (!arr.length) { box.innerHTML = '<div class="empty">이 필터에 미션이 없어요.</div>'; return; }
+  box.innerHTML = arr.map(m => {
+    const sent = Number(m.submittedAt) > 0;
+    const graded = m.status === 'graded';
+    const stTxt = graded ? '✓ 채점 완료' : (sent ? '⏳ 채점 대기' : '열림');
+    const stCls = graded ? ' graded' : (sent ? ' sent' : '');
+    let body = '';
+    if (m.schema) body += '<code class="mc-schema">' + esc(m.schema) + '</code>';
+    body += '<div class="mc-prompt">' + esc(m.prompt) + '</div>';
+    body += '<details class="mc-more"><summary>힌트 보기</summary><div class="mc-hint">' + esc(m.hint || '') + '</div></details>';
+    if (!sent) {
+      body += '<div class="mc-ans"><textarea id="ans-' + m.id + '" placeholder="' + (m.kind === 'sql' ? 'SQL을 적어보세요' : '영어로 한두 문장 써보세요') + '" data-mid="' + m.id + '"></textarea>' +
+        '<button class="btn btn-main" data-v2="clSubmit" data-id="' + m.id + '">제출하기</button></div>';
+    } else {
+      body += '<div class="mc-mine"><span class="who">내 답안</span>' + esc(m.answer) + '</div>';
+      if (graded) {
+        body += '<div class="mc-fb"><div class="sc">Claude 채점 <b>' + (m.score == null ? '—' : m.score) + '</b> / 100</div>' +
+          '<div class="fb">' + esc(m.feedback || '') + '</div>' +
+          (m.corrected ? '<div class="fx">' + esc(m.corrected) + '</div>' : '') + '</div>';
+        if (m.sample) body += '<div class="mc-sample"><b>모범 예시</b>' + esc(m.sample) + '</div>';
+      } else {
+        body += '<div class="cl-wait"><span>⏳</span><div>맥북 Claude Code가 채점하면 여기에 피드백이 와요.<b>python3 claude_bridge.py tutor</b></div></div>';
+      }
+      body += '<button class="btn btn-ghost btn-sm" style="width:100%;margin-top:9px" data-v2="clRedo" data-id="' + m.id + '">다시 쓰기</button>';
+    }
+    return '<div class="mcard' + (graded ? '' : ' open') + '">' +
+      '<div class="mc-top"><span class="mc-kind ' + m.kind + '">' + (m.kind === 'en' ? 'EN' : 'SQL') + '</span>' +
+      '<span class="mc-lv">' + esc(m.level || '') + '</span><span class="mc-st' + stCls + '">' + stTxt + '</span></div>' +
+      '<div class="mc-title">' + esc(m.title || '') + '</div>' + body + '</div>';
+  }).join('');
+  Object.keys(typed).forEach(id => {
+    const el = document.getElementById(id);
+    if (el && !el.value) el.value = typed[id];
+  });
+}
+function v2ClaudeSubmit(id) {
+  const m = missionById(id); if (!m) return;
+  const ta = document.getElementById('ans-' + id);
+  const ans = ta ? ta.value.trim() : '';
+  if (ans.length < 12) { toast('조금만 더 — 최소 12자 이상 써줘'); if (ta) ta.focus(); return; }
+  m.answer = ans.slice(0, 4000);
+  m.submittedAt = Date.now();
+  m.status = 'submitted';
+  m.feedback = ''; m.corrected = ''; m.score = null; m.gradedAt = 0;
+  m.updatedAt = Date.now();
+  const first = !m.expGiven;
+  m.expGiven = true;
+  save();
+  logExec('mission', '🎓 ' + (m.kind === 'en' ? '영어' : 'SQL') + ' 미션 제출 · ' + v2Short(m.title, 24));
+  renderClaude(); renderRoadmap(); renderHero();
+  MISSION_SYNC.push(m);
+  sfx('ok'); vibe(18);
+  if (first) addExp(8);
+  toast('제출 완료 · Claude Code가 채점하면 알려줄게');
+}
+function v2ClaudeRedo(id) {
+  const m = missionById(id); if (!m) return;
+  confirmSheet('다시 쓰기', '채점 결과는 지워지고 새 답안을 쓸 수 있어요. (Claude가 다시 채점해요)', '다시 쓰기', () => {
+    m.status = 'open'; m.submittedAt = 0; m.gradedAt = 0; m.feedback = ''; m.corrected = ''; m.score = null;
+    m.updatedAt = Date.now(); save(); renderClaude(); renderRoadmap();
+    MISSION_SYNC.push(m);
+  });
+}
+function v2ClaudeNew() {
+  S.claude.reqAt = Date.now(); save();
+  toast('요청 남겼어요 · 맥북에서 tutor 를 돌리면 새 문제가 와요');
+  logExec('mission', '✉️ 새 미션 요청');
+  MISSION_SYNC.pushRequest();
+}
+function v2ClaudeFilter(k) { S.claude.filter = k; save(); renderClaude(); sfx('tap'); }
+
+/* ── Firebase 미션 동기화 (claude_missions) ───────────────── */
+const MISSION_SYNC = (function () {
+  const CFG = {
+    apiKey: 'AIzaSyASwhf_PEgFLG6lyx8O9VO6Me-zJz3RPIA',
+    authDomain: 'yongeun-town.firebaseapp.com',
+    projectId: 'yongeun-town',
+    storageBucket: 'yongeun-town.firebasestorage.app',
+    messagingSenderId: '454159602450',
+    appId: '1:454159602450:web:3945db2ef8ba0415a299cb'
+  };
+  const COL = 'claude_missions';
+  let db = null, booted = false, booting = false, mode = '', lastSnapAt = 0;
+  let snapCount = 0;
+
+  function status() {
+    if (!booted) return 'boot';
+    if (mode === 'off') return 'off';
+    if (lastSnapAt) return 'on';
+    return 'boot';
+  }
+  function paint() { try { renderClaudeStatusOnly(); } catch (e) { } }
+  function renderClaudeStatusOnly() {
+    const s = claudeStatusText();
+    const dot = $('#clDot'); if (dot) dot.className = 'cl-dot ' + s.cls;
+    const stEl = $('#clState'); if (stEl) stEl.textContent = s.label;
+    const subEl = $('#clSub'); if (subEl) subEl.textContent = s.sub;
+  }
+  function sleep(ms) { return new Promise(r => setTimeout(r, ms)); }
+  function loadScript(src) {
+    return new Promise((resolve, reject) => {
+      if (document.querySelector('script[src="' + src + '"]')) return resolve();
+      const s = document.createElement('script');
+      s.src = src; s.async = true; s.crossOrigin = 'anonymous';
+      s.onload = () => resolve(); s.onerror = () => reject(new Error('sdk load failed'));
+      document.head.appendChild(s);
+    });
+  }
+  async function ensureSdk() {
+    for (let i = 0; i < 40; i++) {
+      if (window.firebase && window.firebase.firestore) return true;
+      await sleep(150);
+    }
+    try {
+      await loadScript('https://www.gstatic.com/firebasejs/10.14.1/firebase-app-compat.js');
+      await loadScript('https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore-compat.js');
+    } catch (e) { }
+    return !!(window.firebase && window.firebase.firestore);
+  }
+
+  function docData(m) {
+    const o = {
+      id: m.id, kind: m.kind, level: m.level || '', title: m.title || '', prompt: m.prompt || '',
+      schema: m.schema || '', hint: m.hint || '', sample: m.sample || '', source: m.source || 'app',
+      answer: m.answer || '', status: m.status || 'open',
+      submittedAt: Number(m.submittedAt) || 0, gradedAt: Number(m.gradedAt) || 0,
+      feedback: m.feedback || '', corrected: m.corrected || '',
+      score: (m.score == null ? null : Number(m.score)),
+      createdAt: Number(m.createdAt) || Date.now(),
+      updatedAt: Number(m.updatedAt) || Date.now()
+    };
+    Object.keys(o).forEach(k => { if (o[k] === undefined) delete o[k]; });
+    return o;
+  }
+  function fromDoc(id, d) {
+    return {
+      id: id, kind: d.kind || 'en', level: d.level || '', title: d.title || '(새 미션)',
+      prompt: d.prompt || '', schema: d.schema || '', hint: d.hint || '', sample: d.sample || '',
+      source: d.source || 'claude', answer: d.answer || '', status: d.status || 'open',
+      submittedAt: Number(d.submittedAt) || 0, gradedAt: Number(d.gradedAt) || 0,
+      feedback: d.feedback || '', corrected: d.corrected || '',
+      score: (d.score == null || d.score === '' ? null : Number(d.score)),
+      createdAt: Number(d.createdAt) || Number(d.updatedAt) || Date.now(),
+      updatedAt: Number(d.updatedAt) || Date.now()
+    };
+  }
+  function merge(r) {
+    if (!r || !r.id) return false;
+    const list = claudeList();
+    const i = list.findIndex(m => m.id === r.id);
+    if (i < 0) { list.push(r); return true; }
+    const cur = list[i];
+    const ru = Number(r.updatedAt) || 0, cu = Number(cur.updatedAt) || 0;
+    if (ru <= cu) return false;               // 이 기기가 더 최신 (방금 제출·다시 쓰기)
+    const out = Object.assign({}, cur);
+    ['kind', 'level', 'title', 'prompt', 'schema', 'hint', 'sample', 'source', 'createdAt',
+      'answer', 'submittedAt', 'status', 'feedback', 'corrected', 'gradedAt'].forEach(k => {
+      if (r[k] !== undefined) out[k] = r[k];
+    });
+    out.score = (r.score === undefined ? cur.score : r.score);
+    out.updatedAt = ru;
+    const newlyGraded = out.status === 'graded' && cur.status !== 'graded';
+    list[i] = out;
+    if (newlyGraded && !out.expGradedGiven) {
+      out.expGradedGiven = true;
+      setTimeout(() => {
+        try {
+          logExec('mission', '🎓 채점 도착 · ' + (out.kind === 'en' ? '영어' : 'SQL') + ' ' + (out.score == null ? '' : out.score + '점'));
+          addExp(6);
+        } catch (e) { }
+      }, 400);
+    }
+    return true;
+  }
+  function push(m) {
+    if (!db) { queue(m.id); return; }
+    try {
+      db.collection(COL).doc(m.id).set(docData(m), { merge: true }).then(() => {
+        S.claude.pendingPush = (S.claude.pendingPush || []).filter(x => x !== m.id);
+        v2LocalSave(); paint();
+      }).catch(() => { queue(m.id); paint(); });
+    } catch (e) { queue(m.id); }
+  }
+  function queue(id) {
+    S.claude.pendingPush = S.claude.pendingPush || [];
+    if (S.claude.pendingPush.indexOf(id) < 0) S.claude.pendingPush.push(id);
+    v2LocalSave();
+  }
+  function flush() {
+    if (!db) return;
+    const ids = (S.claude.pendingPush || []).slice();
+    ids.forEach(id => { const m = missionById(id); if (m) push(m); else { S.claude.pendingPush = S.claude.pendingPush.filter(x => x !== id); } });
+  }
+  function pushRequest() {
+    // 요청 시각은 town_state(state.claude.reqAt)에 이미 실려요 — 맥북 tutor가 읽습니다.
+    if (db) { try { flush(); } catch (e) { } }
+  }
+  async function boot() {
+    if (booting || db) return;
+    booting = true; mode = 'boot'; paint();
+    try {
+      if (navigator.onLine === false) throw new Error('offline');
+      const ok = await ensureSdk();
+      if (!ok) throw new Error('sdk');
+      if (!window.firebase.apps.length) window.firebase.initializeApp(CFG);
+      db = window.firebase.firestore();
+      booted = true; mode = 'on';
+      db.collection(COL).orderBy('createdAt', 'asc').limit(100).onSnapshot(function (snap) {
+        lastSnapAt = Date.now();
+        let changed = false;
+        snap.forEach(function (d) { if (merge(fromDoc(d.id, d.data()))) changed = true; });
+        S.claude.lastSync = Date.now();
+        v2LocalSave();
+        if (changed) { renderClaude(); renderRoadmap(); renderHero(); }
+        paint();
+        if (snap.empty && !S.claude.cloudSeeded) {
+          S.claude.cloudSeeded = true; v2LocalSave();
+          missionSeeds().forEach(seed => { try { db.collection(COL).doc(seed.id).set(docData(seed), { merge: true }); } catch (e) { } });
+        }
+        snapCount++;
+      }, function (err) {
+        mode = 'off'; paint();
+        console.warn('[용은타운] 미션 동기화 구독 오류', (err && err.code) || err);
+      });
+      flush();
+    } catch (e) {
+      mode = 'off'; booted = true; paint();
+      console.warn('[용은타운] 미션 동기화를 시작하지 못했어요 — 이 기기에 저장합니다.', e && e.message);
+    } finally { booting = false; }
+  }
+  window.addEventListener('online', function () { if (!db) boot(); else flush(); });
+  // 오프라인에서 제출한 답안은 20초마다 다시 올려봅니다
+  setInterval(function () { try { if (db && S.claude && (S.claude.pendingPush || []).length) flush(); } catch (e) { } }, 20000);
+  return { boot: boot, status: status, push: push, flush: flush, pushRequest: pushRequest, _merge: merge, _db: function () { return db; } };
+})();
+
+/* ── V2 액션 (data-v2) ───────────────────────────────────── */
+function v2HeroDone(id) {
+  const q = S.quests.find(x => x.id === id); if (!q) return;
+  if (q.doneDate === TODAY) { toast('이미 끝낸 미션이에요'); return; }
+  const key = townKeyForQuest(q.title);
+  toggleQuest(id);
+  if (TOWN.ready) { townActivity(key, '✓ ' + v2Short(q.title, 18) + ' 완료!', 2800); townFocus(key); }
+  renderHero(); renderRoadmap();
+}
+document.addEventListener('click', function (e) {
+  const el = e.target.closest && e.target.closest('[data-v2]');
+  if (!el) return;
+  const k = el.dataset.v2;
+  try {
+    if (k === 'heroDone') { e.preventDefault(); v2HeroDone(el.dataset.id); }
+    else if (k === 'heroStart') { e.preventDefault(); startQuest(el.dataset.id); }
+    else if (k === 'heroGo') { e.preventDefault(); switchTab(el.dataset.k); sfx('tap'); }
+    else if (k === 'rmToggle') { e.preventDefault(); v2RmToggle(el.dataset.id, el); }
+    else if (k === 'brickChip') {
+      e.preventDefault();
+      BRICK_CHIP = (BRICK_CHIP === el.dataset.k) ? '' : el.dataset.k;
+      const lab = $('#brickLabel'); if (lab && BRICK_CHIP) lab.value = BRICK_CHIP;
+      renderBrick(); sfx('tap');
+    }
+    else if (k === 'brickBreak') { e.preventDefault(); v2BrickBreak(); }
+    else if (k === 'brickDel') { e.preventDefault(); v2BrickDel(el.dataset.id); }
+    else if (k === 'clSubmit') { e.preventDefault(); v2ClaudeSubmit(el.dataset.id); }
+    else if (k === 'clRedo') { e.preventDefault(); v2ClaudeRedo(el.dataset.id); }
+    else if (k === 'clFilter') { e.preventDefault(); v2ClaudeFilter(el.dataset.k); }
+    else if (k === 'clNew') { e.preventDefault(); v2ClaudeNew(); }
+    else if (k === 'clSync') { e.preventDefault(); MISSION_SYNC.boot(); MISSION_SYNC.flush(); toast('☁️ 미션 동기화 중…'); }
+  } catch (err) { console.warn('[용은타운] V2 액션 오류', k, err); }
+});
+
+/* ── 초기화 ───────────────────────────────────────────────── */
+ensureV2State();
+window.__V2 = {
+  state: function () { return S; },
+  render: function () { renderHero(); renderRoadmap(); renderBrick(); renderClaude(); },
+  cloud: function () { return MISSION_SYNC.status(); },
+  missions: function () { return MISSION_SYNC; },
+  seeds: missionSeeds
+};
+setTimeout(function () { try { MISSION_SYNC.boot(); } catch (e) { } }, 900);
+
 
 init();
 
