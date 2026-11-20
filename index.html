@@ -4565,10 +4565,10 @@ init();
       [[0, 0, 0, 1.5], [1.6, -0.2, 0.15, 1.1], [-1.6, -0.15, -0.1, 1.0], [0.5, 0.6, 0, 1.0], [-0.7, 0.45, 0.2, 0.85]].forEach(function (s) {
         const m = new THREE.Mesh(gSph(s[3], 12), cm); m.position.set(s[0], s[1], s[2]); m.scale.y = 0.66; g.add(m);
       });
-      const CP = [[-27, 24, -5], [-9, 27, -25], [13, 25, -22], [27, 23, 3], [3, 28, 19], [-22, 26, 15]];
+      const CP = [[-30, 30, -16], [-7, 33, -30], [19, 31, -27], [33, 29, 5], [5, 34, 25], [-26, 32, 19]];
       const cp = CP[i % CP.length];
       g.position.set(cp[0], cp[1], cp[2]);
-      g.scale.setScalar(1.15 + (i % 3) * 0.22);
+      g.scale.setScalar(1.0 + (i % 3) * 0.2);
       scene.add(g); clouds.push({ g: g, x: g.position.x, y: g.position.y, sp: 0.25 + i * 0.09 });
     }
 
@@ -4810,7 +4810,7 @@ init();
       for (let i = 0; i < lampMats.length; i++) lampMats[i].emissiveIntensity = phC.lamp;
       for (let i = 0; i < glowSprites.length; i++) glowSprites[i].material.opacity = phC.lamp * 0.34;
       for (let i = 0; i < cloudMats.length; i++) {
-        cloudMats[i].opacity = 0.08 + phC.cloud * 0.86;
+        cloudMats[i].opacity = 0.06 + phC.cloud * 0.72;
         cloudMats[i].emissiveIntensity = 0.02 + phC.cloud * 0.34;
       }
 
