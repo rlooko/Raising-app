@@ -4558,17 +4558,17 @@ init();
 
     // 구름
     const clouds = [];
-    for (let i = 0; i < 6; i++) {
+    for (let i = 0; i < 5; i++) {
       const g = new THREE.Group();
       const cm = new THREE.MeshStandardMaterial({ color: 0xFFFFFF, transparent: true, opacity: 0.95, roughness: 1, emissive: new THREE.Color('#FFFFFF'), emissiveIntensity: 0.34 });
       cloudMats.push(cm);
       [[0, 0, 0, 1.5], [1.6, -0.2, 0.15, 1.1], [-1.6, -0.15, -0.1, 1.0], [0.5, 0.6, 0, 1.0], [-0.7, 0.45, 0.2, 0.85]].forEach(function (s) {
         const m = new THREE.Mesh(gSph(s[3], 12), cm); m.position.set(s[0], s[1], s[2]); m.scale.y = 0.66; g.add(m);
       });
-      const CP = [[-30, 30, -16], [-7, 33, -30], [19, 31, -27], [33, 29, 5], [5, 34, 25], [-26, 32, 19]];
+      const CP = [[-17, 13, -19], [3, 16.5, -23], [19, 12, -17], [-27, 15, -4], [27, 14, -3]];
       const cp = CP[i % CP.length];
       g.position.set(cp[0], cp[1], cp[2]);
-      g.scale.setScalar(1.0 + (i % 3) * 0.2);
+      g.scale.setScalar(1.25 + (i % 3) * 0.2);
       scene.add(g); clouds.push({ g: g, x: g.position.x, y: g.position.y, sp: 0.25 + i * 0.09 });
     }
 
@@ -4594,15 +4594,15 @@ init();
 
       const eyes = new THREE.Group();
       [[-0.21, 1], [0.21, 1]].forEach(function (e) {
-        const eye = add(eyes, gSph(0.095, 12), eyeM, e[0], 0.86, 0.56);
-        eye.scale.set(1, 1.3, 0.55);
-        const hl = add(eyes, gSph(0.032, 8), mat('#FFFFFF'), e[0] - 0.03, 0.92, 0.63);
+        const eye = add(eyes, gSph(0.125, 12), eyeM, e[0], 0.86, 0.545);
+        eye.scale.set(1, 1.32, 0.55);
+        add(eyes, gSph(0.045, 8), mat('#FFFFFF'), e[0] - 0.04, 0.93, 0.63);
       });
       [[-0.4, 0.72], [0.4, 0.72]].forEach(function (b) {
         const bl = add(eyes, gSph(0.1, 8), blushM, b[0], b[1], 0.5);
         bl.scale.set(1, 0.6, 0.3);
       });
-      const smile = new THREE.Mesh(new THREE.TorusGeometry(0.08, 0.022, 6, 14, Math.PI), eyeM);
+      const smile = new THREE.Mesh(new THREE.TorusGeometry(0.1, 0.028, 6, 14, Math.PI), eyeM);
       smile.position.set(0, 0.72, 0.62); smile.rotation.z = Math.PI; g.add(smile);
       g.add(eyes);
 
@@ -4632,7 +4632,7 @@ init();
       }
       crown.visible = false; g.add(crown);
 
-      g.scale.setScalar(1.5);
+      g.scale.setScalar(1.95);
       g.userData = { armL: armL, armR: armR, footL: footL, footR: footR, body: body, ears: ears, acc: { sprout: sprout, scarf: scarf, crown: crown } };
       return g;
     }
@@ -4648,10 +4648,12 @@ init();
 
       // ㅊ 무늬 (배)
       const cMat = mat('#FFF6FA');
-      add(g, gBox(0.1, 0.035, 0.03, 0.012), cMat, 0, 0.86, 0.52);
-      add(g, gBox(0.3, 0.035, 0.03, 0.012), cMat, 0, 0.78, 0.5);
-      const d1 = add(g, gBox(0.035, 0.2, 0.03, 0.012), cMat, -0.08, 0.65, 0.5); d1.rotation.z = 0.42;
-      const d2 = add(g, gBox(0.035, 0.2, 0.03, 0.012), cMat, 0.08, 0.65, 0.5); d2.rotation.z = -0.42;
+      add(g, gBox(0.11, 0.05, 0.035, 0.014), cMat, 0, 0.88, 0.52);
+      add(g, gBox(0.34, 0.05, 0.035, 0.014), cMat, 0, 0.78, 0.5);
+      const d1 = add(g, gBox(0.05, 0.22, 0.035, 0.014), cMat, -0.09, 0.64, 0.5); d1.rotation.z = 0.42;
+      const d2 = add(g, gBox(0.05, 0.22, 0.035, 0.014), cMat, 0.09, 0.64, 0.5); d2.rotation.z = -0.42;
+      const mouth = new THREE.Mesh(new THREE.TorusGeometry(0.055, 0.016, 6, 12, Math.PI), eyeM);
+      mouth.position.set(0, 0.74, 0.56); mouth.rotation.z = Math.PI; g.add(mouth);
 
       // 귀
       [[-1, 1], [1, -1]].forEach(function (sgn) {
@@ -4663,9 +4665,9 @@ init();
 
       // 눈 · 볼
       [[-0.24, 1], [0.24, 1]].forEach(function (e) {
-        const eye = add(g, gSph(0.085, 12), eyeM, e[0], 0.82, 0.55);
-        eye.scale.set(0.9, 1.15, 0.5);
-        add(g, gSph(0.028, 8), mat('#FFFFFF'), e[0] - 0.025, 0.87, 0.61);
+        const eye = add(g, gSph(0.115, 12), eyeM, e[0], 0.82, 0.54);
+        eye.scale.set(0.95, 1.2, 0.5);
+        add(g, gSph(0.042, 8), mat('#FFFFFF'), e[0] - 0.035, 0.88, 0.61);
       });
       [[-0.44, 0.68], [0.44, 0.68]].forEach(function (b) {
         const bl = add(g, gSph(0.1, 8), blushM, b[0], b[1], 0.5);
@@ -4674,7 +4676,7 @@ init();
       const footL = add(g, gSph(0.14, 10), skin, -0.24, 0.12, 0.06); footL.scale.set(1, 0.65, 1.2);
       const footR = add(g, gSph(0.14, 10), skin, 0.24, 0.12, 0.06); footR.scale.set(1, 0.65, 1.2);
 
-      g.scale.setScalar(1.42);
+      g.scale.setScalar(1.85);
       g.userData = { footL: footL, footR: footR, body: body };
       return g;
     }
@@ -4884,7 +4886,7 @@ init();
 
     function paintBubble(el) {
       if (!el) return;
-      tmpV.set(ygMesh.position.x, ygMesh.position.y + 2.35, ygMesh.position.z).project(camera);
+      tmpV.set(ygMesh.position.x, ygMesh.position.y + 2.9, ygMesh.position.z).project(camera);
       const left = Math.max(9, Math.min(91, (tmpV.x * 0.5 + 0.5) * 100));
       const top = Math.max(7, Math.min(94, (-tmpV.y * 0.5 + 0.5) * 100));
       el.style.left = left.toFixed(2) + '%';
