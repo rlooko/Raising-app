@@ -1521,7 +1521,7 @@ function migrateQuests(s) {
   const before = s.quests.length;
   s.quests = s.quests.filter(q => q && typeof q === 'object' && q.id !== 'q_ads');
   const adsRemoved = s.quests.length !== before;
-  // ② 날짜가 바뀌면: 지난날 끝낸 퀘스트·지난날의 추천 퀘스트는 정리하고, 남은 게 없으면 오늘 추천 3개를 채움
+  // ② 날짜가 바뀌면: 지난날 끝낸 퀘스트·지난날의 추천 퀘스트는 정리하고, 오늘 퀘스트가 3개보다 적으면 추천으로 채움
   if (s.questDay === TODAY) return adsRemoved;
   const keep = [], arch = [];
   s.quests.forEach(q => {
