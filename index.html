@@ -1200,6 +1200,25 @@ details.mc-more .mc-hint{margin-top:6px}
   .brick-burst{animation-duration:.01ms}
 }
 
+/* ── 벽돌 화면: 용은·춘배 응원 ── */
+.cheer{display:flex;align-items:center;gap:6px;margin-top:11px;min-height:40px}
+.pc{position:relative;width:36px;height:36px;border-radius:50%;flex:0 0 auto;
+  box-shadow:0 7px 16px -10px rgba(0,0,0,.9), inset 0 -6px 10px rgba(0,0,0,.07)}
+.pc-yg{background:radial-gradient(circle at 35% 28%,#fffdf6,#efe7ff);border:1.5px solid #4A3F63}
+.pc-cb{background:radial-gradient(circle at 35% 28%,#ffd9e4,#ffb8cd);border:1.5px solid #8C5570}
+.pc .eye{position:absolute;top:13px;width:3.2px;height:4px;border-radius:2px;background:#4A3F63}
+.pc .eye.l{left:11px}.pc .eye.r{right:11px}
+.pc .blush{position:absolute;top:20px;width:5px;height:3px;border-radius:2px;background:#FFB1C8;opacity:.85}
+.pc .blush.l{left:6.5px}.pc .blush.r{right:6.5px}
+.pc-cb span{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;
+  font-size:10.5px;font-weight:900;color:#fff3f8;padding-top:7px}
+.ch-bub{margin-left:3px;font-size:12px;font-weight:800;color:#ffe7f0;line-height:1.35;max-width:220px;
+  background:rgba(0,0,0,.26);border:1px solid rgba(255,255,255,.14);border-radius:11px;padding:6px 9px}
+.cheer.cheer-on .pc{animation:hop .52s ease-in-out 2}
+.cheer.cheer-on .ch-bub{animation:bubPop .45s ease-out}
+@keyframes hop{0%,100%{transform:translateY(0) scale(1)}40%{transform:translateY(-8px) scale(1.06)}}
+@keyframes bubPop{0%{transform:scale(.86);opacity:.35}100%{transform:scale(1);opacity:1}}
+
 </style>
 <script>
 /* 개발용 오류 수집기 — 화면에는 보이지 않고 window.__ERRORS에만 쌓입니다. */
@@ -1822,6 +1841,11 @@ window.addEventListener('unhandledrejection', function (e) { window.__ERRORS.pus
       <div class="s" id="brickMonthSub">누적 0원 · 벽돌 0개</div>
       <div class="brick-gauge"><i id="brickGauge" style="width:0%"></i></div>
       <div class="goal"><span id="brickGoalTxt">목표 200,000원</span><span id="brickGoalPct">0%</span></div>
+      <div class="cheer" id="brickCheer">
+        <div class="pc pc-yg" aria-hidden="true"><i class="eye l"></i><i class="eye r"></i><i class="blush l"></i><i class="blush r"></i></div>
+        <div class="pc pc-cb" aria-hidden="true"><span>ㅊ</span><i class="eye l"></i><i class="eye r"></i></div>
+        <div class="ch-bub" id="brickBub">오늘도 하나 지켰어!</div>
+      </div>
     </div>
 
     <div id="brickStage" aria-hidden="true"></div>
@@ -4673,6 +4697,10 @@ function renderBrick() {
     }).join('') : '<div class="empty">아직 깬 벽돌이 없어요.<br>오늘 참은 커피 한 잔부터 기록해 보세요.</div>';
   }
   const cnt = $('#brickCount'); if (cnt) cnt.textContent = '누적 ' + all.length + '개';
+  const bub = $('#brickBub');
+  if (bub && !bub.dataset.live) {
+    bub.textContent = mSum > 0 ? '이번 달 ' + won(mSum) + ' 지켰어!' : '오늘도 하나 지켰어!';
+  }
   $$('#brickChips .chip2').forEach(b => b.classList.toggle('on', b.dataset.k === BRICK_CHIP));
 }
 function animateBrickBreak(amount, from, to) {
@@ -4723,6 +4751,9 @@ function v2BrickBreak() {
   renderBrick(); renderHero(); renderRoadmap();
   const afterFilled = clamp(Math.floor(brickSum(brickOfMonth(monthKey())) / per), 0, 20);
   animateBrickBreak(amount, Math.min(beforeFilled, 19), Math.min(20, Math.max(afterFilled, beforeFilled + 1)));
+  const cheer = $('#brickCheer'), bub = $('#brickBub');
+  if (bub) { bub.dataset.live = '1'; bub.textContent = '「' + label + '」 참았다! 🎉'; setTimeout(function () { delete bub.dataset.live; }, 2200); }
+  if (cheer) { cheer.classList.remove('cheer-on'); void cheer.offsetWidth; cheer.classList.add('cheer-on'); setTimeout(function () { cheer.classList.remove('cheer-on'); }, 1900); }
   sfx('done'); vibe([12, 26, 12]); confetti(14);
   const exp = clamp(Math.round(amount / 1000) * 2, 2, 24);
   addExp(exp);
