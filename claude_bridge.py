@@ -142,7 +142,10 @@ def _dec(fields):
 
 def _req(method, url, body=None):
     data = None
-    headers = {"Content-Type": "application/json"}
+    headers = {
+        "Content-Type": "application/json",
+        "Referer": "https://rlooko.github.io/",
+    }
     if body is not None:
         data = json.dumps(body).encode("utf-8")
     req = urllib.request.Request(url, data=data, headers=headers, method=method)
