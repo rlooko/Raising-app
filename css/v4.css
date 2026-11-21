@@ -11,6 +11,8 @@
 .fold > summary::after{content:"▾";margin-left:auto;color:var(--tx3);font-size:12px;transition:.2s}
 .fold[open] > summary::after{transform:rotate(180deg)}
 .fold > summary .fold-meta{margin-left:auto;font-size:12px;font-weight:800;color:var(--tx3)}
+.fold > summary .fold-t{flex:0 0 auto;white-space:nowrap}
+.fold > summary .fold-meta{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;text-align:right}
 .fold[open] > summary .fold-meta{margin-right:14px}
 .fold[open] > summary{border-bottom:1px solid rgba(255,255,255,.06)}
 .fold > *:not(summary){padding:0 12px}
