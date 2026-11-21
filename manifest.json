@@ -1,0 +1,26 @@
+{
+ "name": "용은타운",
+ "short_name": "용은타운",
+ "description": "밤 10시, 10분만 켜는 데일리 RPG — 오늘의 원픽·참은 소비·실전 SQL 랩",
+ "start_url": "./index.html",
+ "scope": "./",
+ "display": "standalone",
+ "orientation": "portrait",
+ "background_color": "#141222",
+ "theme_color": "#141222",
+ "lang": "ko",
+ "icons": [
+  {
+   "src": "icon-180.png",
+   "sizes": "180x180",
+   "type": "image/png",
+   "purpose": "any"
+  },
+  {
+   "src": "icon-180.png",
+   "sizes": "180x180",
+   "type": "image/png",
+   "purpose": "maskable"
+  }
+ ]
+}
